@@ -25,7 +25,7 @@
       margin: 0;
       color: var(--ink);
       background: var(--paper);
-      font-family: Georgia, "Times New Roman", serif;
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", Helvetica, Arial, sans-serif;
     }
 
     button, input {
@@ -53,7 +53,7 @@
     .small,
     .metric-label,
     .help {
-      font-family: "Trebuchet MS", sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", Helvetica, Arial, sans-serif;
       text-transform: uppercase;
       letter-spacing: 0.08em;
     }
@@ -83,7 +83,7 @@
 
     .mark {
       color: var(--green);
-      font: bold 14px "Trebuchet MS", sans-serif;
+      font: bold 14px -apple-system, BlinkMacSystemFont, "SF Pro Text", Helvetica, Arial, sans-serif;
       text-align: right;
     }
 
@@ -126,8 +126,21 @@
 
     .dates {
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
+      grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+      gap: 10px;
+      align-items: end;
+    }
+
+    .date-field {
+      min-width: 0;
+    }
+
+    .date-separator {
+      color: var(--muted);
+      padding-bottom: 12px;
+      font: 11px -apple-system, BlinkMacSystemFont, "SF Pro Text", Helvetica, Arial, sans-serif;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
     }
 
     input[type="date"],
@@ -147,27 +160,8 @@
       margin-top: 7px;
     }
 
-    .rule-box {
-      border-top: 1px solid var(--line);
-      margin-top: 8px;
-      padding-top: 15px;
-    }
-
-    .rule {
-      display: flex;
-      justify-content: space-between;
-      gap: 20px;
-      padding: 10px 0;
-      border-bottom: 1px solid #eceade;
-      font-size: 15px;
-    }
-
-    .rule strong {
-      color: var(--green);
-      font-weight: normal;
-    }
-
     .button {
+      display: none;
       width: 100%;
       margin-top: 8px;
       cursor: pointer;
@@ -176,7 +170,7 @@
       padding: 15px 18px;
       color: #fff;
       background: var(--green);
-      font-size: 12px;
+      font-size: 14px;
       font-weight: bold;
       transition: background 0.2s, transform 0.2s;
     }
@@ -227,56 +221,20 @@
     }
 
     .result-date-list {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 7px 14px;
+      display: block;
       max-width: 580px;
       font-size: clamp(23px, 3vw, 36px);
-      line-height: 1.1;
+      line-height: 1.25;
     }
 
     .result-date-list span {
-      white-space: nowrap;
-    }
-
-    .result-sub {
-      position: relative;
-      z-index: 1;
-      color: #d3e3d5;
-      font-size: 17px;
-    }
-
-    .metrics {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 10px;
-      position: relative;
-      z-index: 1;
-      margin-top: 34px;
-    }
-
-    .metric {
-      border-top: 1px solid rgba(255, 255, 255, 0.3);
-      padding-top: 10px;
-    }
-
-    .metric-label {
       display: block;
-      font-size: 10px;
-      color: #b6d0c0;
-    }
-
-    .metric strong {
-      display: block;
-      font-size: 19px;
-      margin-top: 5px;
-      font-weight: normal;
     }
 
     .notice {
       margin-top: 18px;
       color: var(--muted);
-      font: 13px "Trebuchet MS", sans-serif;
+      font: 13px -apple-system, BlinkMacSystemFont, "SF Pro Text", Helvetica, Arial, sans-serif;
     }
 
     .notice.error { color: var(--red); }
@@ -310,7 +268,7 @@
       color: var(--muted);
       background: transparent;
       cursor: pointer;
-      font: bold 10px "Trebuchet MS", sans-serif;
+      font: bold 10px -apple-system, BlinkMacSystemFont, "SF Pro Text", Helvetica, Arial, sans-serif;
       text-transform: uppercase;
       letter-spacing: 0.06em;
     }
@@ -373,7 +331,7 @@
       border-radius: 2px;
       background: var(--green-soft);
       color: var(--green);
-      font: bold 10px "Trebuchet MS", sans-serif;
+      font: bold 10px -apple-system, BlinkMacSystemFont, "SF Pro Text", Helvetica, Arial, sans-serif;
       text-transform: uppercase;
       letter-spacing: 0.05em;
     }
@@ -396,7 +354,7 @@
     footer {
       margin-top: 28px;
       color: var(--muted);
-      font: 12px "Trebuchet MS", sans-serif;
+      font: 12px -apple-system, BlinkMacSystemFont, "SF Pro Text", Helvetica, Arial, sans-serif;
       line-height: 1.5;
     }
 
@@ -411,9 +369,8 @@
       .shell { padding: 22px 15px 40px; }
       header { margin-bottom: 30px; }
       .controls, .hero-result { padding: 21px; }
-      .dates { grid-template-columns: 1fr; }
-      .metrics { gap: 7px; }
-      .metric strong { font-size: 16px; }
+      .dates { grid-template-columns: 1fr 1fr; gap: 12px; }
+      .date-separator { display: none; }
       .results-head { align-items: flex-start; flex-direction: column; }
       .sort-controls { width: 100%; }
       .sort-button { flex: 1; }
@@ -424,51 +381,37 @@
   <main class="shell">
     <header>
       <div>
-        <div class="eyebrow">Tour Aotearoa / Cape Reinga</div>
-        <h1>Find the tide.<br><em>Ride the beach.</em></h1>
-        <p class="intro">Plan the best start windows for 90 Mile Beach using locally stored tide predictions, sunrise, and sunset checks.</p>
+        <div class="eyebrow">Tour Aotearoa</div>
+        <h1>Biking 90 mile beach.</h1>
+        <p class="intro">Plan the best start windows for 90 Mile Beach based on tide and daylight hours.</p>
       </div>
-      <div class="mark">90 MILE RIDE<span>Built for the Kennett Brothers</span></div>
+      <div class="mark"><span>The Kennett Brothers</span></div>
     </header>
 
     <section class="planner" aria-label="Ride start planner">
       <form class="panel controls" id="planner-form">
-        <div>
-          <label class="label" for="start-date">Search from</label>
-          <div class="dates">
-            <div>
-              <input id="start-date" type="date" required>
-            </div>
-            <div>
-              <label class="label" for="end-date">to</label>
-              <input id="end-date" type="date" required>
-            </div>
+        <div class="dates">
+          <div class="date-field">
+            <label class="label" for="start-date">Search from</label>
+            <input id="start-date" type="date" required>
+          </div>
+          <div class="date-separator" aria-hidden="true">to</div>
+          <div class="date-field">
+            <label class="label" for="end-date">Search to</label>
+            <input id="end-date" type="date" required>
           </div>
         </div>
 
-        <div class="rule-box">
-          <div class="label">Planning rules</div>
-          <div class="rule"><span>Leave before low tide</span><strong>3-4 hours</strong></div>
-          <div class="rule"><span>Low tide after sunrise</span><strong>Required</strong></div>
-          <div class="rule"><span>Low tide + 4 hours</span><strong>Before sunset</strong></div>
-        </div>
-
-        <button class="button" id="calculate" type="submit">Calculate rideable starts</button>
+        <button class="button" id="calculate" type="submit">Calculate best days</button>
       </form>
 
       <article class="panel hero-result" aria-live="polite">
-        <div class="eyebrow">Your strongest windows</div>
-        <div class="result-date" id="best-date">Choose dates to begin</div>
-        <div class="result-sub" id="best-summary">We will compare low tides with daylight in your selected window.</div>
-        <div class="metrics">
-          <div class="metric"><span class="metric-label">Suggested leave</span><strong id="best-start">-</strong></div>
-          <div class="metric"><span class="metric-label">Low tide</span><strong id="best-low">-</strong></div>
-          <div class="metric"><span class="metric-label">Tide height</span><strong id="best-height">-</strong></div>
-        </div>
+        <div class="eyebrow">Suggested dates</div>
+        <div class="result-date" id="best-date"></div>
       </article>
     </section>
 
-    <div class="notice" id="notice">Start by selecting dates. Tide predictions are stored locally for reliable static hosting.</div>
+    <div class="notice" id="notice"></div>
 
     <section class="results">
       <div class="results-head">
@@ -486,13 +429,14 @@
               <th>Date</th>
               <th>Suggested start</th>
               <th>Low tide</th>
+              <th>Estimate finish</th>
               <th>Sunrise -> sunset</th>
               <th>Fit</th>
               <th>Notes</th>
             </tr>
           </thead>
           <tbody id="results-body">
-            <tr><td colspan="6">Select a date range and calculate your best beach starts.</td></tr>
+            <tr><td colspan="7">Select a date range and calculate your best beach starts.</td></tr>
           </tbody>
         </table>
       </div>
@@ -519,10 +463,6 @@
     let currentSort = "best";
 
     const bestDateEl = document.querySelector("#best-date");
-    const bestSummaryEl = document.querySelector("#best-summary");
-    const bestStartEl = document.querySelector("#best-start");
-    const bestLowEl = document.querySelector("#best-low");
-    const bestHeightEl = document.querySelector("#best-height");
     const resultCountEl = document.querySelector("#result-count");
 
     const formatDate = value => new Intl.DateTimeFormat("en-NZ", {
@@ -548,8 +488,8 @@
     }
 
     function setDefaults() {
-      startInput.value = "2027-01-01";
-      endInput.value = "2027-01-31";
+      startInput.value = "2027-02-01";
+      endInput.value = "2027-02-28";
     }
 
     function solarTime(dateText, isSunrise) {
@@ -643,21 +583,27 @@
       const tideMinutes = tideNz.getHours() * 60 + tideNz.getMinutes();
       const sunriseMinutes = sunriseNz.getHours() * 60 + sunriseNz.getMinutes();
       const sunsetMinutes = sunsetNz.getHours() * 60 + sunsetNz.getMinutes();
-      const afterSunrise = tideMinutes >= sunriseMinutes;
-      const beforeSunset = tideMinutes + 4 * 60 <= sunsetMinutes;
+      const suggestedStartMinutes = tideMinutes - 210;
+      const startAfterSunrise = suggestedStartMinutes >= sunriseMinutes;
+      const estimatedFinishMinutes = suggestedStartMinutes + 8 * 60;
+      const beforeSunset = estimatedFinishMinutes <= sunsetMinutes;
 
       const hour = tideMinutes / 60;
       const middayScore = 1 - Math.min(1, Math.abs(hour - 12) / 8);
-      const daylightScore = (afterSunrise ? 35 : 0) + (beforeSunset ? 35 : 0);
+      const daylightScore = (startAfterSunrise ? 35 : 0) + (beforeSunset ? 35 : 0);
       const score = Math.round(daylightScore + middayScore * 30);
 
-      let note = "Rideable under the planning rules.";
-      if (!afterSunrise && !beforeSunset) {
-        note = "Fails sunrise and sunset windows.";
-      } else if (!afterSunrise) {
-        note = "Low tide happens before sunrise.";
+      let note = "Best days to ride";
+      if (!startAfterSunrise && !beforeSunset) {
+        note = "Starting in the dark; finishing in the dark.";
+      } else if (!startAfterSunrise) {
+        note = "Starting in the dark.";
       } else if (!beforeSunset) {
-        note = "Low tide + 4h pushes beyond sunset.";
+        note = "Finishing in the dark.";
+      } else if (score >= 90 && score <= 95) {
+        note = "Good days to ride";
+      } else if (score >= 80 && score < 90) {
+        note = "OK days to ride";
       }
 
       return {
@@ -667,17 +613,15 @@
         sunrise: sunriseNz,
         sunset: sunsetNz,
         suggestedStart,
-        rideable: afterSunrise && beforeSunset,
+        rideable: startAfterSunrise && beforeSunset,
         score,
         note
       };
     }
 
-    function renderResults(rows, sourceLabel) {
+    function renderResults(rows) {
       currentRows = rows;
       renderTable();
-      notice.textContent = `Calculation complete using ${sourceLabel}.`;
-      notice.className = "notice";
     }
 
     function renderTable() {
@@ -691,13 +635,7 @@
 
       bestDateEl.innerHTML = strongestRows.length
         ? `<div class="result-date-list">${strongestRows.map(row => `<span>${escapeHtml(formatDate(row.tide))}</span>`).join("")}</div>`
-        : "No days over 95% fit";
-      bestSummaryEl.textContent = strongestRows.length
-        ? `${strongestRows.length} day${strongestRows.length === 1 ? "" : "s"} above 95% fit, shown in date order.`
-        : "The closest available fit is shown below; no day in this range cleared 95%.";
-      bestStartEl.textContent = formatTime(best.suggestedStart);
-      bestLowEl.textContent = formatTime(best.tide);
-      bestHeightEl.textContent = `${best.height.toFixed(2)} m`;
+        : "No good days to ride";
 
       body.innerHTML = rows.map(row => {
         const fitText = row.rideable ? `${row.score}% fit` : "Conflict";
@@ -705,14 +643,16 @@
           ? "blue"
           : row.score >= 80 && row.score < 90
             ? "orange"
-            : "";
+            : "green";
         const tagClass = row.rideable ? `tag ${fitBand}` : "tag bad";
-        const highlight = row === best ? "best" : "";
+        const rowClass = row.rideable ? `fit-${fitBand}` : "fit-conflict";
+        const highlight = row === best ? " best" : "";
 
-        return `<tr class="${highlight}">
+        return `<tr class="${rowClass}${highlight}">
           <td><strong>${escapeHtml(formatDate(row.tide))}</strong></td>
           <td>${escapeHtml(formatTime(row.suggestedStart))}</td>
           <td>${escapeHtml(formatTime(row.tide))} (${row.height.toFixed(2)}m)</td>
+          <td>${escapeHtml(formatTime(new Date(row.suggestedStart.getTime() + 8 * 60 * 60 * 1000)))}</td>
           <td>${escapeHtml(formatTime(row.sunrise))} -> ${escapeHtml(formatTime(row.sunset))}</td>
           <td><span class="${tagClass}">${escapeHtml(fitText)}</span></td>
           <td>${escapeHtml(row.note)}</td>
@@ -759,9 +699,7 @@
       return { tides: predictions, source: "local static tide data" };
     }
 
-    form.addEventListener("submit", async event => {
-      event.preventDefault();
-
+    async function calculateBestDays() {
       const start = startInput.value;
       const end = endInput.value;
       if (!start || !end || end < start) {
@@ -770,20 +708,13 @@
         return;
       }
 
-      const days = Math.round((new Date(`${end}T12:00:00`) - new Date(`${start}T12:00:00`)) / 86400000) + 1;
-      if (days > 31) {
-        notice.textContent = "Keep date range to 31 days or less for readable results.";
-        notice.className = "notice error";
-        return;
-      }
-
       button.disabled = true;
       button.textContent = "Calculating...";
-      notice.textContent = "Loading tide and daylight data...";
+      notice.textContent = "";
       notice.className = "notice";
 
       try {
-        const [{ tides, source }, sunlight] = await Promise.all([
+        const [{ tides }, sunlight] = await Promise.all([
           gatherTides(start, end),
           fetchSunlightMap(start, end)
         ]);
@@ -796,24 +727,30 @@
           throw new Error("No suitable low-tide entries found in this date range.");
         }
 
-        renderResults(candidates, source);
+        renderResults(candidates);
       } catch (error) {
         notice.textContent = error.message;
         notice.className = "notice error";
-        body.innerHTML = "<tr><td colspan=\"6\">No results yet. Fix the data source and run again.</td></tr>";
+        body.innerHTML = "<tr><td colspan=\"7\">No results yet. Fix the data source and run again.</td></tr>";
         bestDateEl.textContent = "No recommendation";
-        bestSummaryEl.textContent = "A valid tide source is needed to calculate start windows.";
-        bestStartEl.textContent = "-";
-        bestLowEl.textContent = "-";
-        bestHeightEl.textContent = "-";
         resultCountEl.textContent = "No windows compared";
       } finally {
         button.disabled = false;
-        button.textContent = "Calculate rideable starts";
+        button.textContent = "Calculate best days";
       }
+    }
+
+    form.addEventListener("submit", event => {
+      event.preventDefault();
+      calculateBestDays();
+    });
+
+    [startInput, endInput].forEach(input => {
+      input.addEventListener("change", calculateBestDays);
     });
 
     setDefaults();
+    calculateBestDays();
   </script>
 </body>
 </html>
