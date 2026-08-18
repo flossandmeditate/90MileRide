@@ -415,7 +415,7 @@
 
     <section class="results">
       <div class="results-head">
-        <h2>Start windows</h2>
+        <h2></h2>
         <div class="sort-controls" aria-label="Sort start windows">
           <button class="sort-button active" id="sort-best" type="button" data-sort="best">Best fit</button>
           <button class="sort-button" id="sort-date" type="button" data-sort="date">Date order</button>
@@ -646,7 +646,7 @@
             : "green";
         const tagClass = row.rideable ? `tag ${fitBand}` : "tag bad";
         const rowClass = row.rideable ? `fit-${fitBand}` : "fit-conflict";
-        const highlight = row === best ? " best" : "";
+        const highlight = row.note === "Best days to ride" ? " best" : "";
 
         return `<tr class="${rowClass}${highlight}">
           <td><strong>${escapeHtml(formatDate(row.tide))}</strong></td>
