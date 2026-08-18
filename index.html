@@ -406,7 +406,7 @@
       </form>
 
       <article class="panel hero-result" aria-live="polite">
-        <div class="eyebrow">Suggested dates</div>
+        <div class="eyebrow">Best dates to ride 90 mile</div>
         <div class="result-date" id="best-date"></div>
       </article>
     </section>
@@ -429,9 +429,9 @@
               <th>Date</th>
               <th>Suggested start</th>
               <th>Low tide</th>
-              <th>Estimate finish</th>
+              <th>Estimated finish</th>
               <th>Sunrise -> sunset</th>
-              <th>Fit</th>
+              <th>Rating</th>
               <th>Notes</th>
             </tr>
           </thead>
@@ -638,7 +638,7 @@
         : "No good days to ride";
 
       body.innerHTML = rows.map(row => {
-        const fitText = row.rideable ? `${row.score}% fit` : "Conflict";
+        const fitText = row.rideable ? `${row.score}%` : "NOT RIDEABLE";
         const fitBand = row.score >= 90 && row.score <= 95
           ? "blue"
           : row.score >= 80 && row.score < 90
