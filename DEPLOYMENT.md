@@ -1,28 +1,31 @@
 # Deploying 90 Mile Ride
 
-This app uses a Netlify Function so the NIWA credential never reaches the browser.
+The public app is now completely static. Upload the contents of this folder, including the `data` folder, to any ordinary web server. There is no Netlify setup, server function, API key, or user upload involved when the app is running.
 
-## Netlify setup
+## Generating the tide files
+
+The repository includes `scripts/generate-static-tides.ps1`. It uses NIWA once to create one JSON file per year under `data/`, then the public app reads those files.
 
 1. Revoke and regenerate any NIWA credentials that were shared in chat or committed anywhere.
-2. Create a Netlify site connected to this repository.
-3. Set the build publish directory to `.`. The included `netlify.toml` already configures this and the functions directory.
-4. In Netlify, open **Site configuration -> Environment variables** and add:
+2. Set the regenerated key in your current PowerShell session. Do not put it in a file:
 
-   - Name: `NIWA_API_KEY`
-   - Value: the regenerated NIWA API key
+   `$env:NIWA_API_KEY = "paste-your-regenerated-key-here"`
 
-5. Deploy the site.
-6. Open the deployed site and select a date range. The page calls `/.netlify/functions/tides`; the function calls NIWA with the private key.
+3. Run:
 
-## Local testing
+   `./scripts/generate-static-tides.ps1`
 
-To test the function locally, run the site with Netlify tooling (not plain file preview):
+By default this generates only 2027, so a normal run uses a single year's data and cannot accidentally request the full 50-year range. The script requests NIWA in 31-day chunks and writes only tide predictions to the JSON file. The key is never written to the repository.
 
-1. Install Netlify CLI.
-2. In this folder run `netlify dev`.
-3. Open the local URL shown by Netlify and test the planner there.
+You can choose another range:
 
-If you open `index.html` directly or with a generic static preview, `/.netlify/functions/tides` will not exist and the app will show an endpoint unavailable message.
+`./scripts/generate-static-tides.ps1 -StartYear 2027 -EndYear 2076`
 
-The NIWA secret is not needed by the Tide API request shown in the developer documentation and should not be added to the site or repository.
+## Publishing
+
+Upload these items to the same directory on your web server:
+
+- `index.html`
+- `data/2027.json` through `data/2076.json`
+
+Do not open `index.html` using a `file://` URL. Use a web server, because browsers block local JSON fetches from some file previews. No server-side programming is required.

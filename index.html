@@ -280,6 +280,34 @@
       margin-bottom: 13px;
     }
 
+    .sort-controls {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      padding: 3px;
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      background: rgba(255, 253, 248, 0.7);
+    }
+
+    .sort-button {
+      border: 0;
+      border-radius: 2px;
+      padding: 8px 10px;
+      color: var(--muted);
+      background: transparent;
+      cursor: pointer;
+      font: bold 10px "Trebuchet MS", sans-serif;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .sort-button:hover,
+    .sort-button.active {
+      color: var(--green);
+      background: var(--green-soft);
+    }
+
     h2 {
       margin: 0;
       font-size: 30px;
@@ -337,6 +365,16 @@
       letter-spacing: 0.05em;
     }
 
+    .tag.blue {
+      background: #dceaf6;
+      color: #245f8f;
+    }
+
+    .tag.orange {
+      background: #fbe6d3;
+      color: #a9571f;
+    }
+
     .tag.bad {
       background: #fbe3dc;
       color: var(--red);
@@ -363,6 +401,9 @@
       .dates { grid-template-columns: 1fr; }
       .metrics { gap: 7px; }
       .metric strong { font-size: 16px; }
+      .results-head { align-items: flex-start; flex-direction: column; }
+      .sort-controls { width: 100%; }
+      .sort-button { flex: 1; }
     }
   </style>
 </head>
@@ -372,7 +413,7 @@
       <div>
         <div class="eyebrow">Tour Aotearoa / Cape Reinga</div>
         <h1>Find the tide.<br><em>Ride the beach.</em></h1>
-        <p class="intro">Plan the best start windows for 90 Mile Beach using low tide, sunrise, and sunset checks.</p>
+        <p class="intro">Plan the best start windows for 90 Mile Beach using locally stored tide predictions, sunrise, and sunset checks.</p>
       </div>
       <div class="mark">90 MILE RIDE<span>Built for the Kennett Brothers</span></div>
     </header>
@@ -414,11 +455,15 @@
       </article>
     </section>
 
-    <div class="notice" id="notice">Start by selecting dates. The latest tide forecast will be loaded securely.</div>
+    <div class="notice" id="notice">Start by selecting dates. Tide predictions are stored locally for reliable static hosting.</div>
 
     <section class="results">
       <div class="results-head">
         <h2>Start windows</h2>
+        <div class="sort-controls" aria-label="Sort start windows">
+          <button class="sort-button active" id="sort-best" type="button" data-sort="best">Best fit</button>
+          <button class="sort-button" id="sort-date" type="button" data-sort="date">Date order</button>
+        </div>
         <span class="small" id="result-count">Waiting for a date range</span>
       </div>
       <div class="table-wrap">
@@ -456,6 +501,9 @@
     const button = document.querySelector("#calculate");
     const notice = document.querySelector("#notice");
     const body = document.querySelector("#results-body");
+    const sortButtons = document.querySelectorAll(".sort-button");
+    let currentRows = [];
+    let currentSort = "best";
 
     const bestDateEl = document.querySelector("#best-date");
     const bestSummaryEl = document.querySelector("#best-summary");
@@ -487,14 +535,45 @@
     }
 
     function setDefaults() {
-      const today = new Date();
-      const later = new Date(today);
-      later.setDate(today.getDate() + 13);
-      startInput.value = dateOnly(today);
-      endInput.value = dateOnly(later);
+      startInput.value = "2027-01-01";
+      endInput.value = "2027-01-31";
     }
 
-    async function fetchSunlightMap(start, end) {
+    function solarTime(dateText, isSunrise) {
+      const date = new Date(`${dateText}T12:00:00Z`);
+      const yearStart = new Date(Date.UTC(date.getUTCFullYear(), 0, 0));
+      const dayOfYear = Math.floor((date - yearStart) / 86400000);
+      const longitudeHour = LOCATION.longitude / 15;
+      const approximateTime = dayOfYear + ((isSunrise ? 6 : 18) - longitudeHour) / 24;
+      const solarMeanAnomaly = (0.9856 * approximateTime) - 3.289;
+      let solarLongitude = solarMeanAnomaly + (1.916 * Math.sin(solarMeanAnomaly * Math.PI / 180)) + (0.020 * Math.sin(2 * solarMeanAnomaly * Math.PI / 180)) + 282.634;
+      solarLongitude = (solarLongitude + 360) % 360;
+      let rightAscension = Math.atan(0.91764 * Math.tan(solarLongitude * Math.PI / 180)) * 180 / Math.PI;
+      rightAscension = (rightAscension + 360) % 360;
+      rightAscension += 90 * Math.floor(solarLongitude / 90) - 90 * Math.floor(rightAscension / 90);
+      rightAscension /= 15;
+      const sineDeclination = 0.39782 * Math.sin(solarLongitude * Math.PI / 180);
+      const cosineDeclination = Math.cos(Math.asin(sineDeclination));
+      const cosineHourAngle = (Math.cos(90.833 * Math.PI / 180) - (sineDeclination * Math.sin(LOCATION.latitude * Math.PI / 180))) / (cosineDeclination * Math.cos(LOCATION.latitude * Math.PI / 180));
+
+      if (cosineHourAngle > 1 || cosineHourAngle < -1) {
+        return null;
+      }
+
+      let hourAngle = Math.acos(cosineHourAngle) * 180 / Math.PI;
+      if (isSunrise) {
+        hourAngle = 360 - hourAngle;
+      }
+      hourAngle /= 15;
+      const localMeanTime = hourAngle + rightAscension - (0.06571 * approximateTime) - 6.622;
+      const universalTime = (localMeanTime - longitudeHour + 24) % 24;
+      const hours = Math.floor(universalTime);
+      const minutes = Math.floor((universalTime - hours) * 60);
+      const seconds = Math.round((((universalTime - hours) * 60) - minutes) * 60);
+      return new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(), hours, minutes, seconds));
+    }
+
+    function fetchSunlightMap(start, end) {
       const dates = [];
       let current = new Date(`${start}T12:00:00`);
       const last = new Date(`${end}T12:00:00`);
@@ -504,18 +583,10 @@
         current.setDate(current.getDate() + 1);
       }
 
-      const rows = await Promise.all(dates.map(async date => {
-        const response = await fetch(`https://api.sunrise-sunset.org/json?lat=${LOCATION.latitude}&lng=${LOCATION.longitude}&date=${date}&formatted=0`);
-        if (!response.ok) {
-          throw new Error("Daylight service unavailable");
-        }
-
-        const data = await response.json();
-        return [date, {
-          sunrise: new Date(data.results.sunrise),
-          sunset: new Date(data.results.sunset)
-        }];
-      }));
+      const rows = dates.map(date => [date, {
+        sunrise: solarTime(date, true),
+        sunset: solarTime(date, false)
+      }]);
 
       return Object.fromEntries(rows);
     }
@@ -555,12 +626,14 @@
       const sunsetNz = toNzWallClock(sun.sunset);
 
       const suggestedStart = new Date(tideNz.getTime() - 3.5 * 60 * 60 * 1000);
-      const finishWindow = new Date(tideNz.getTime() + 4 * 60 * 60 * 1000);
 
-      const afterSunrise = tideNz >= sunriseNz;
-      const beforeSunset = finishWindow <= sunsetNz;
+      const tideMinutes = tideNz.getHours() * 60 + tideNz.getMinutes();
+      const sunriseMinutes = sunriseNz.getHours() * 60 + sunriseNz.getMinutes();
+      const sunsetMinutes = sunsetNz.getHours() * 60 + sunsetNz.getMinutes();
+      const afterSunrise = tideMinutes >= sunriseMinutes;
+      const beforeSunset = tideMinutes + 4 * 60 <= sunsetMinutes;
 
-      const hour = tideNz.getHours() + tideNz.getMinutes() / 60;
+      const hour = tideMinutes / 60;
       const middayScore = 1 - Math.min(1, Math.abs(hour - 12) / 8);
       const daylightScore = (afterSunrise ? 35 : 0) + (beforeSunset ? 35 : 0);
       const score = Math.round(daylightScore + middayScore * 30);
@@ -588,8 +661,17 @@
     }
 
     function renderResults(rows, sourceLabel) {
-      rows.sort((a, b) => b.score - a.score);
-      const best = rows[0];
+      currentRows = rows;
+      renderTable();
+      notice.textContent = `Calculation complete using ${sourceLabel}.`;
+      notice.className = "notice";
+    }
+
+    function renderTable() {
+      const rows = [...currentRows].sort((a, b) => currentSort === "date"
+        ? a.tide - b.tide
+        : b.score - a.score);
+      const best = currentRows.reduce((strongest, row) => row.score > strongest.score ? row : strongest, currentRows[0]);
 
       bestDateEl.textContent = formatDate(best.tide);
       bestSummaryEl.textContent = best.rideable
@@ -599,10 +681,15 @@
       bestLowEl.textContent = formatTime(best.tide);
       bestHeightEl.textContent = `${best.height.toFixed(2)} m`;
 
-      body.innerHTML = rows.map((row, index) => {
+      body.innerHTML = rows.map(row => {
         const fitText = row.rideable ? `${row.score}% fit` : "Conflict";
-        const tagClass = row.rideable ? "tag" : "tag bad";
-        const highlight = index === 0 ? "best" : "";
+        const fitBand = row.score >= 90 && row.score <= 95
+          ? "blue"
+          : row.score >= 80 && row.score < 90
+            ? "orange"
+            : "";
+        const tagClass = row.rideable ? `tag ${fitBand}` : "tag bad";
+        const highlight = row === best ? "best" : "";
 
         return `<tr class="${highlight}">
           <td><strong>${escapeHtml(formatDate(row.tide))}</strong></td>
@@ -615,37 +702,43 @@
       }).join("");
 
       resultCountEl.textContent = `${rows.length} day windows compared`;
-      notice.textContent = `Calculation complete using ${sourceLabel}.`;
-      notice.className = "notice";
     }
 
-    async function gatherTides(start, days) {
-      const url = new URL("/.netlify/functions/tides", window.location.origin);
-      url.searchParams.set("startDate", start);
-      url.searchParams.set("numberOfDays", String(days));
-      const response = await fetch(url);
-      const text = await response.text();
-      let data;
-
-      try {
-        data = JSON.parse(text);
-      } catch (error) {
-        const looksLikeHtml = /^\s*</.test(text);
-        if (looksLikeHtml) {
-          throw new Error("Tide endpoint is unavailable here. Run with Netlify dev or use the deployed Netlify site.");
+    sortButtons.forEach((sortButton) => {
+      sortButton.addEventListener("click", () => {
+        currentSort = sortButton.dataset.sort;
+        sortButtons.forEach(buttonElement => buttonElement.classList.toggle("active", buttonElement === sortButton));
+        if (currentRows.length) {
+          renderTable();
         }
-        throw new Error("Tide endpoint returned an invalid response.");
+      });
+    });
+
+    async function gatherTides(start, end) {
+      const years = [];
+      for (let year = Number(start.slice(0, 4)); year <= Number(end.slice(0, 4)); year += 1) {
+        years.push(year);
       }
 
-      if (!response.ok) {
-        throw new Error(data.error || "The tide forecast could not be loaded.");
+      const responses = await Promise.all(years.map(async year => {
+        const response = await fetch(`data/${year}.json`);
+        if (!response.ok) {
+          throw new Error(`Static tide data for ${year} is not installed yet.`);
+        }
+        return response.json();
+      }));
+
+      const predictions = responses
+        .flatMap(data => data.predictions || data.values || [])
+        .map(item => ({ time: new Date(item.time), height: Number(item.height) }))
+        .filter(item => !Number.isNaN(item.time.getTime()) && Number.isFinite(item.height))
+        .filter(item => item.time >= new Date(`${start}T00:00:00`) && item.time <= new Date(`${end}T23:59:59`));
+
+      if (!predictions.length) {
+        throw new Error("No static tide predictions exist for the selected dates.");
       }
 
-      if (!Array.isArray(data.predictions)) {
-        throw new Error("Tide endpoint did not return predictions.");
-      }
-
-      return { tides: data.predictions, source: "live NIWA forecast" };
+      return { tides: predictions, source: "local static tide data" };
     }
 
     form.addEventListener("submit", async event => {
@@ -673,7 +766,7 @@
 
       try {
         const [{ tides, source }, sunlight] = await Promise.all([
-          gatherTides(start, days),
+          gatherTides(start, end),
           fetchSunlightMap(start, end)
         ]);
 
