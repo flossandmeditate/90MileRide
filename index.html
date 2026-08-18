@@ -1,0 +1,708 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>90 Mile Ride | Tour Aotearoa Start Planner</title>
+  <style>
+    :root {
+      --ink: #15231f;
+      --muted: #62736c;
+      --paper: #f4f0e6;
+      --panel: #fffdf8;
+      --line: #d9d8ca;
+      --green: #1d624e;
+      --green-soft: #dce9d8;
+      --orange: #e9783f;
+      --yellow: #f6d762;
+      --red: #bd563f;
+      --shadow: 0 18px 50px rgba(35, 53, 42, 0.11);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: var(--paper);
+      font-family: Georgia, "Times New Roman", serif;
+    }
+
+    button, input {
+      font: inherit;
+    }
+
+    .shell {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 28px 24px 60px;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      gap: 24px;
+      align-items: flex-start;
+      margin-bottom: 34px;
+    }
+
+    .eyebrow,
+    .label,
+    th,
+    .button,
+    .small,
+    .metric-label,
+    .help {
+      font-family: "Trebuchet MS", sans-serif;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .eyebrow {
+      color: var(--orange);
+      font-size: 12px;
+      font-weight: bold;
+    }
+
+    h1 {
+      max-width: 760px;
+      margin: 9px 0 0;
+      font-size: clamp(40px, 6vw, 74px);
+      line-height: 0.95;
+      font-weight: 500;
+      letter-spacing: -0.04em;
+    }
+
+    .intro {
+      max-width: 720px;
+      color: var(--muted);
+      font-size: 18px;
+      line-height: 1.45;
+      margin: 18px 0 0;
+    }
+
+    .mark {
+      color: var(--green);
+      font: bold 14px "Trebuchet MS", sans-serif;
+      text-align: right;
+    }
+
+    .mark span {
+      display: block;
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: normal;
+      margin-top: 5px;
+    }
+
+    .planner {
+      display: grid;
+      grid-template-columns: 1fr 1.35fr;
+      gap: 22px;
+      align-items: stretch;
+    }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      box-shadow: var(--shadow);
+    }
+
+    .controls {
+      padding: 25px;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .label {
+      display: block;
+      font-size: 11px;
+      color: var(--muted);
+      font-weight: bold;
+      margin: 0 0 8px;
+    }
+
+    .dates {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    input[type="date"],
+    input[type="text"],
+    input[type="file"] {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 3px;
+      background: #fbfaf4;
+      color: var(--ink);
+      padding: 11px;
+    }
+
+    .help {
+      font-size: 10px;
+      color: var(--muted);
+      margin-top: 7px;
+    }
+
+    .rule-box {
+      border-top: 1px solid var(--line);
+      margin-top: 8px;
+      padding-top: 15px;
+    }
+
+    .rule {
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      padding: 10px 0;
+      border-bottom: 1px solid #eceade;
+      font-size: 15px;
+    }
+
+    .rule strong {
+      color: var(--green);
+      font-weight: normal;
+    }
+
+    .button {
+      width: 100%;
+      margin-top: 8px;
+      cursor: pointer;
+      border: 0;
+      border-radius: 3px;
+      padding: 15px 18px;
+      color: #fff;
+      background: var(--green);
+      font-size: 12px;
+      font-weight: bold;
+      transition: background 0.2s, transform 0.2s;
+    }
+
+    .button:hover {
+      background: #124a3b;
+      transform: translateY(-1px);
+    }
+
+    .button:disabled {
+      opacity: 0.6;
+      cursor: wait;
+      transform: none;
+    }
+
+    .hero-result {
+      position: relative;
+      overflow: hidden;
+      padding: 29px;
+      background: var(--green);
+      color: #fff;
+    }
+
+    .hero-result:after {
+      content: "";
+      position: absolute;
+      right: -45px;
+      bottom: -80px;
+      width: 250px;
+      height: 250px;
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      border-radius: 50%;
+      box-shadow: 0 0 0 28px rgba(255, 255, 255, 0.06), 0 0 0 57px rgba(255, 255, 255, 0.04);
+    }
+
+    .hero-result .eyebrow {
+      color: var(--yellow);
+      position: relative;
+      z-index: 1;
+    }
+
+    .result-date {
+      position: relative;
+      z-index: 1;
+      margin: 24px 0 4px;
+      font-size: clamp(30px, 4vw, 54px);
+      line-height: 1;
+    }
+
+    .result-sub {
+      position: relative;
+      z-index: 1;
+      color: #d3e3d5;
+      font-size: 17px;
+    }
+
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      position: relative;
+      z-index: 1;
+      margin-top: 34px;
+    }
+
+    .metric {
+      border-top: 1px solid rgba(255, 255, 255, 0.3);
+      padding-top: 10px;
+    }
+
+    .metric-label {
+      display: block;
+      font-size: 10px;
+      color: #b6d0c0;
+    }
+
+    .metric strong {
+      display: block;
+      font-size: 19px;
+      margin-top: 5px;
+      font-weight: normal;
+    }
+
+    .notice {
+      margin-top: 18px;
+      color: var(--muted);
+      font: 13px "Trebuchet MS", sans-serif;
+    }
+
+    .notice.error { color: var(--red); }
+
+    .results {
+      margin-top: 34px;
+    }
+
+    .results-head {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 15px;
+      margin-bottom: 13px;
+    }
+
+    h2 {
+      margin: 0;
+      font-size: 30px;
+      font-weight: 500;
+    }
+
+    .small {
+      font-size: 10px;
+      color: var(--muted);
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 6px;
+    }
+
+    table {
+      width: 100%;
+      min-width: 820px;
+      border-collapse: collapse;
+    }
+
+    th {
+      text-align: left;
+      padding: 14px 16px;
+      color: var(--muted);
+      background: #e9eee4;
+      font-size: 10px;
+    }
+
+    td {
+      padding: 16px;
+      border-top: 1px solid #e5e5d9;
+      font-size: 15px;
+      white-space: nowrap;
+    }
+
+    tr.best { background: #fff8db; }
+
+    tr.best td:first-child {
+      border-left: 4px solid var(--orange);
+      padding-left: 12px;
+    }
+
+    .tag {
+      display: inline-block;
+      padding: 5px 7px;
+      border-radius: 2px;
+      background: var(--green-soft);
+      color: var(--green);
+      font: bold 10px "Trebuchet MS", sans-serif;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .tag.bad {
+      background: #fbe3dc;
+      color: var(--red);
+    }
+
+    footer {
+      margin-top: 28px;
+      color: var(--muted);
+      font: 12px "Trebuchet MS", sans-serif;
+      line-height: 1.5;
+    }
+
+    footer a { color: var(--green); }
+
+    @media (max-width: 900px) {
+      .planner { grid-template-columns: 1fr; }
+      .mark { display: none; }
+    }
+
+    @media (max-width: 760px) {
+      .shell { padding: 22px 15px 40px; }
+      header { margin-bottom: 30px; }
+      .controls, .hero-result { padding: 21px; }
+      .dates { grid-template-columns: 1fr; }
+      .metrics { gap: 7px; }
+      .metric strong { font-size: 16px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <header>
+      <div>
+        <div class="eyebrow">Tour Aotearoa / Cape Reinga</div>
+        <h1>Find the tide.<br><em>Ride the beach.</em></h1>
+        <p class="intro">Plan the best start windows for 90 Mile Beach using low tide, sunrise, and sunset checks.</p>
+      </div>
+      <div class="mark">90 MILE RIDE<span>Built for the Kennett Brothers</span></div>
+    </header>
+
+    <section class="planner" aria-label="Ride start planner">
+      <form class="panel controls" id="planner-form">
+        <div>
+          <label class="label" for="start-date">Search from</label>
+          <div class="dates">
+            <div>
+              <input id="start-date" type="date" required>
+            </div>
+            <div>
+              <label class="label" for="end-date">to</label>
+              <input id="end-date" type="date" required>
+            </div>
+          </div>
+        </div>
+
+        <div class="rule-box">
+          <div class="label">Planning rules</div>
+          <div class="rule"><span>Leave before low tide</span><strong>3-4 hours</strong></div>
+          <div class="rule"><span>Low tide after sunrise</span><strong>Required</strong></div>
+          <div class="rule"><span>Low tide + 4 hours</span><strong>Before sunset</strong></div>
+        </div>
+
+        <button class="button" id="calculate" type="submit">Calculate rideable starts</button>
+      </form>
+
+      <article class="panel hero-result" aria-live="polite">
+        <div class="eyebrow">Your strongest window</div>
+        <div class="result-date" id="best-date">Choose dates to begin</div>
+        <div class="result-sub" id="best-summary">We will compare low tides with daylight in your selected window.</div>
+        <div class="metrics">
+          <div class="metric"><span class="metric-label">Suggested leave</span><strong id="best-start">-</strong></div>
+          <div class="metric"><span class="metric-label">Low tide</span><strong id="best-low">-</strong></div>
+          <div class="metric"><span class="metric-label">Tide height</span><strong id="best-height">-</strong></div>
+        </div>
+      </article>
+    </section>
+
+    <div class="notice" id="notice">Start by selecting dates. The latest tide forecast will be loaded securely.</div>
+
+    <section class="results">
+      <div class="results-head">
+        <h2>Start windows</h2>
+        <span class="small" id="result-count">Waiting for a date range</span>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Suggested start</th>
+              <th>Low tide</th>
+              <th>Sunrise -> sunset</th>
+              <th>Fit</th>
+              <th>Notes</th>
+            </tr>
+          </thead>
+          <tbody id="results-body">
+            <tr><td colspan="6">Select a date range and calculate your best beach starts.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <footer>
+      Reference: <a href="https://tides.niwa.co.nz/?latitude=-34.537&amp;longitude=172.736&amp;numberOfDays=14" target="_blank" rel="noreferrer">NIWA tide forecaster</a>. Tide and daylight should always be checked again before departure.
+    </footer>
+  </main>
+
+  <script>
+    const LOCATION = { latitude: -34.537, longitude: 172.736 };
+    const NZ_TIMEZONE = "Pacific/Auckland";
+    const LOW_TIDE_MAX_METERS = 1.4;
+
+    const form = document.querySelector("#planner-form");
+    const startInput = document.querySelector("#start-date");
+    const endInput = document.querySelector("#end-date");
+    const button = document.querySelector("#calculate");
+    const notice = document.querySelector("#notice");
+    const body = document.querySelector("#results-body");
+
+    const bestDateEl = document.querySelector("#best-date");
+    const bestSummaryEl = document.querySelector("#best-summary");
+    const bestStartEl = document.querySelector("#best-start");
+    const bestLowEl = document.querySelector("#best-low");
+    const bestHeightEl = document.querySelector("#best-height");
+    const resultCountEl = document.querySelector("#result-count");
+
+    const formatDate = value => new Intl.DateTimeFormat("en-NZ", {
+      day: "numeric", month: "short", year: "numeric", timeZone: NZ_TIMEZONE
+    }).format(value);
+
+    const formatTime = value => new Intl.DateTimeFormat("en-NZ", {
+      hour: "numeric", minute: "2-digit", timeZone: NZ_TIMEZONE
+    }).format(value);
+
+    const localDateKey = value => new Intl.DateTimeFormat("en-CA", {
+      year: "numeric", month: "2-digit", day: "2-digit", timeZone: NZ_TIMEZONE
+    }).format(value);
+
+    function escapeHtml(value) {
+      return String(value).replace(/[&<>"']/g, char => (
+        { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;" }[char]
+      ));
+    }
+
+    function dateOnly(value) {
+      return value.toISOString().slice(0, 10);
+    }
+
+    function setDefaults() {
+      const today = new Date();
+      const later = new Date(today);
+      later.setDate(today.getDate() + 13);
+      startInput.value = dateOnly(today);
+      endInput.value = dateOnly(later);
+    }
+
+    async function fetchSunlightMap(start, end) {
+      const dates = [];
+      let current = new Date(`${start}T12:00:00`);
+      const last = new Date(`${end}T12:00:00`);
+
+      while (current <= last) {
+        dates.push(dateOnly(current));
+        current.setDate(current.getDate() + 1);
+      }
+
+      const rows = await Promise.all(dates.map(async date => {
+        const response = await fetch(`https://api.sunrise-sunset.org/json?lat=${LOCATION.latitude}&lng=${LOCATION.longitude}&date=${date}&formatted=0`);
+        if (!response.ok) {
+          throw new Error("Daylight service unavailable");
+        }
+
+        const data = await response.json();
+        return [date, {
+          sunrise: new Date(data.results.sunrise),
+          sunset: new Date(data.results.sunset)
+        }];
+      }));
+
+      return Object.fromEntries(rows);
+    }
+
+    function toNzWallClock(date) {
+      return new Date(date.toLocaleString("en-US", { timeZone: NZ_TIMEZONE }));
+    }
+
+    function pickDailyCandidateLows(tides) {
+      const lowsOnly = tides.filter(tide => tide.height <= LOW_TIDE_MAX_METERS);
+      const byDate = new Map();
+
+      for (const tide of lowsOnly) {
+        const key = localDateKey(tide.time);
+        if (!byDate.has(key)) {
+          byDate.set(key, []);
+        }
+        byDate.get(key).push(tide);
+      }
+
+      const candidates = [];
+      for (const [date, entries] of byDate.entries()) {
+        entries.sort((a, b) => {
+          const hourA = toNzWallClock(a.time).getHours() + toNzWallClock(a.time).getMinutes() / 60;
+          const hourB = toNzWallClock(b.time).getHours() + toNzWallClock(b.time).getMinutes() / 60;
+          return Math.abs(hourA - 12) - Math.abs(hourB - 12);
+        });
+        candidates.push({ date, tide: entries[0] });
+      }
+
+      return candidates;
+    }
+
+    function scoreCandidate(candidate, sun) {
+      const tideNz = toNzWallClock(candidate.tide.time);
+      const sunriseNz = toNzWallClock(sun.sunrise);
+      const sunsetNz = toNzWallClock(sun.sunset);
+
+      const suggestedStart = new Date(tideNz.getTime() - 3.5 * 60 * 60 * 1000);
+      const finishWindow = new Date(tideNz.getTime() + 4 * 60 * 60 * 1000);
+
+      const afterSunrise = tideNz >= sunriseNz;
+      const beforeSunset = finishWindow <= sunsetNz;
+
+      const hour = tideNz.getHours() + tideNz.getMinutes() / 60;
+      const middayScore = 1 - Math.min(1, Math.abs(hour - 12) / 8);
+      const daylightScore = (afterSunrise ? 35 : 0) + (beforeSunset ? 35 : 0);
+      const score = Math.round(daylightScore + middayScore * 30);
+
+      let note = "Rideable under the planning rules.";
+      if (!afterSunrise && !beforeSunset) {
+        note = "Fails sunrise and sunset windows.";
+      } else if (!afterSunrise) {
+        note = "Low tide happens before sunrise.";
+      } else if (!beforeSunset) {
+        note = "Low tide + 4h pushes beyond sunset.";
+      }
+
+      return {
+        date: candidate.date,
+        tide: tideNz,
+        height: candidate.tide.height,
+        sunrise: sunriseNz,
+        sunset: sunsetNz,
+        suggestedStart,
+        rideable: afterSunrise && beforeSunset,
+        score,
+        note
+      };
+    }
+
+    function renderResults(rows, sourceLabel) {
+      rows.sort((a, b) => b.score - a.score);
+      const best = rows[0];
+
+      bestDateEl.textContent = formatDate(best.tide);
+      bestSummaryEl.textContent = best.rideable
+        ? "Strong fit: low tide aligns with daylight and a practical start."
+        : "Closest available fit in this window. Check notes for constraints.";
+      bestStartEl.textContent = formatTime(best.suggestedStart);
+      bestLowEl.textContent = formatTime(best.tide);
+      bestHeightEl.textContent = `${best.height.toFixed(2)} m`;
+
+      body.innerHTML = rows.map((row, index) => {
+        const fitText = row.rideable ? `${row.score}% fit` : "Conflict";
+        const tagClass = row.rideable ? "tag" : "tag bad";
+        const highlight = index === 0 ? "best" : "";
+
+        return `<tr class="${highlight}">
+          <td><strong>${escapeHtml(formatDate(row.tide))}</strong></td>
+          <td>${escapeHtml(formatTime(row.suggestedStart))}</td>
+          <td>${escapeHtml(formatTime(row.tide))} (${row.height.toFixed(2)}m)</td>
+          <td>${escapeHtml(formatTime(row.sunrise))} -> ${escapeHtml(formatTime(row.sunset))}</td>
+          <td><span class="${tagClass}">${escapeHtml(fitText)}</span></td>
+          <td>${escapeHtml(row.note)}</td>
+        </tr>`;
+      }).join("");
+
+      resultCountEl.textContent = `${rows.length} day windows compared`;
+      notice.textContent = `Calculation complete using ${sourceLabel}.`;
+      notice.className = "notice";
+    }
+
+    async function gatherTides(start, days) {
+      const url = new URL("/.netlify/functions/tides", window.location.origin);
+      url.searchParams.set("startDate", start);
+      url.searchParams.set("numberOfDays", String(days));
+      const response = await fetch(url);
+      const text = await response.text();
+      let data;
+
+      try {
+        data = JSON.parse(text);
+      } catch (error) {
+        const looksLikeHtml = /^\s*</.test(text);
+        if (looksLikeHtml) {
+          throw new Error("Tide endpoint is unavailable here. Run with Netlify dev or use the deployed Netlify site.");
+        }
+        throw new Error("Tide endpoint returned an invalid response.");
+      }
+
+      if (!response.ok) {
+        throw new Error(data.error || "The tide forecast could not be loaded.");
+      }
+
+      if (!Array.isArray(data.predictions)) {
+        throw new Error("Tide endpoint did not return predictions.");
+      }
+
+      return { tides: data.predictions, source: "live NIWA forecast" };
+    }
+
+    form.addEventListener("submit", async event => {
+      event.preventDefault();
+
+      const start = startInput.value;
+      const end = endInput.value;
+      if (!start || !end || end < start) {
+        notice.textContent = "Choose a valid start and end date.";
+        notice.className = "notice error";
+        return;
+      }
+
+      const days = Math.round((new Date(`${end}T12:00:00`) - new Date(`${start}T12:00:00`)) / 86400000) + 1;
+      if (days > 31) {
+        notice.textContent = "Keep date range to 31 days or less for readable results.";
+        notice.className = "notice error";
+        return;
+      }
+
+      button.disabled = true;
+      button.textContent = "Calculating...";
+      notice.textContent = "Loading tide and daylight data...";
+      notice.className = "notice";
+
+      try {
+        const [{ tides, source }, sunlight] = await Promise.all([
+          gatherTides(start, days),
+          fetchSunlightMap(start, end)
+        ]);
+
+        const candidates = pickDailyCandidateLows(tides)
+          .filter(item => sunlight[item.date])
+          .map(item => scoreCandidate(item, sunlight[item.date]));
+
+        if (!candidates.length) {
+          throw new Error("No suitable low-tide entries found in this date range.");
+        }
+
+        renderResults(candidates, source);
+      } catch (error) {
+        notice.textContent = error.message;
+        notice.className = "notice error";
+        body.innerHTML = "<tr><td colspan=\"6\">No results yet. Fix the data source and run again.</td></tr>";
+        bestDateEl.textContent = "No recommendation";
+        bestSummaryEl.textContent = "A valid tide source is needed to calculate start windows.";
+        bestStartEl.textContent = "-";
+        bestLowEl.textContent = "-";
+        bestHeightEl.textContent = "-";
+        resultCountEl.textContent = "No windows compared";
+      } finally {
+        button.disabled = false;
+        button.textContent = "Calculate rideable starts";
+      }
+    });
+
+    setDefaults();
+  </script>
+</body>
+</html>
