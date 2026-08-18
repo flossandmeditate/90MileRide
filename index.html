@@ -226,6 +226,19 @@
       line-height: 1;
     }
 
+    .result-date-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px 14px;
+      max-width: 580px;
+      font-size: clamp(23px, 3vw, 36px);
+      line-height: 1.1;
+    }
+
+    .result-date-list span {
+      white-space: nowrap;
+    }
+
     .result-sub {
       position: relative;
       z-index: 1;
@@ -444,7 +457,7 @@
       </form>
 
       <article class="panel hero-result" aria-live="polite">
-        <div class="eyebrow">Your strongest window</div>
+        <div class="eyebrow">Your strongest windows</div>
         <div class="result-date" id="best-date">Choose dates to begin</div>
         <div class="result-sub" id="best-summary">We will compare low tides with daylight in your selected window.</div>
         <div class="metrics">
@@ -671,12 +684,17 @@
       const rows = [...currentRows].sort((a, b) => currentSort === "date"
         ? a.tide - b.tide
         : b.score - a.score);
-      const best = currentRows.reduce((strongest, row) => row.score > strongest.score ? row : strongest, currentRows[0]);
+      const strongestRows = currentRows
+        .filter(row => row.score > 95)
+        .sort((a, b) => a.tide - b.tide);
+      const best = strongestRows[0] || currentRows.reduce((strongest, row) => row.score > strongest.score ? row : strongest, currentRows[0]);
 
-      bestDateEl.textContent = formatDate(best.tide);
-      bestSummaryEl.textContent = best.rideable
-        ? "Strong fit: low tide aligns with daylight and a practical start."
-        : "Closest available fit in this window. Check notes for constraints.";
+      bestDateEl.innerHTML = strongestRows.length
+        ? `<div class="result-date-list">${strongestRows.map(row => `<span>${escapeHtml(formatDate(row.tide))}</span>`).join("")}</div>`
+        : "No days over 95% fit";
+      bestSummaryEl.textContent = strongestRows.length
+        ? `${strongestRows.length} day${strongestRows.length === 1 ? "" : "s"} above 95% fit, shown in date order.`
+        : "The closest available fit is shown below; no day in this range cleared 95%.";
       bestStartEl.textContent = formatTime(best.suggestedStart);
       bestLowEl.textContent = formatTime(best.tide);
       bestHeightEl.textContent = `${best.height.toFixed(2)} m`;
