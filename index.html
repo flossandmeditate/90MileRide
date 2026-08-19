@@ -320,6 +320,8 @@
 
     tr.best { background: #fff8db; }
 
+    tr.best-top { background: #ffeec2; }
+
     tr.best td:first-child {
       border-left: 4px solid var(--orange);
       padding-left: 12px;
@@ -349,6 +351,34 @@
     .tag.bad {
       background: #fbe3dc;
       color: var(--red);
+    }
+
+    .stars {
+      display: inline-flex;
+      align-items: center;
+      gap: 2px;
+      font-size: 19px;
+      line-height: 1;
+      white-space: nowrap;
+    }
+
+    .star {
+      display: inline-block;
+      transform-origin: 50% 55%;
+    }
+
+    .star.filled {
+      color: #f2ad1f;
+      text-shadow: 0 0 8px rgba(242, 173, 31, 0.45), 0 1px 0 rgba(128, 75, 17, 0.35);
+    }
+
+    .star.empty {
+      color: #cdbf9f;
+      text-shadow: 0 1px 0 rgba(255, 255, 255, 0.55);
+    }
+
+    tr.best-top .star.filled {
+      color: #f7bc35;
     }
 
     footer {
@@ -382,8 +412,8 @@
     <header>
       <div>
         <div class="eyebrow">Tour Aotearoa</div>
-        <h1>Biking 90 mile beach.</h1>
-        <p class="intro">Plan the best start windows for 90 Mile Beach based on tide and daylight hours.</p>
+        <h1>Biking 90 Mile Beach</h1>
+        <p class="intro">Plan the best start <b>time/date</b> for riding 90 Mile Beach <b>from Cape Reinga</b> - based on tide and daylight.</p>
       </div>
       <div class="mark"><span>The Kennett Brothers</span></div>
     </header>
@@ -427,11 +457,11 @@
           <thead>
             <tr>
               <th>Date</th>
-              <th>Suggested start</th>
+              <th>Suggested start time</th>
               <th>Low tide</th>
-              <th>Estimated finish</th>
+              <th>Estimated finish time</th>
               <th>Sunrise -> sunset</th>
-              <th>Rating</th>
+              <th>Stars</th>
               <th>Notes</th>
             </tr>
           </thead>
@@ -472,6 +502,23 @@
     const formatTime = value => new Intl.DateTimeFormat("en-NZ", {
       hour: "numeric", minute: "2-digit", timeZone: NZ_TIMEZONE
     }).format(value);
+
+    function getStarCount(score) {
+      if (score >= 95) return 5;
+      if (score >= 90) return 4;
+      if (score >= 80) return 2;
+      return 0;
+    }
+
+    function renderStars(score) {
+      const stars = getStarCount(score);
+      const starIcons = Array.from({ length: 5 }, (_, index) => (
+        index < stars
+          ? '<span class="star filled" aria-hidden="true">★</span>'
+          : '<span class="star empty" aria-hidden="true">☆</span>'
+      )).join("");
+      return `<span class="stars" aria-label="${stars} out of 5 stars">${starIcons}</span>`;
+    }
 
     const localDateKey = value => new Intl.DateTimeFormat("en-CA", {
       year: "numeric", month: "2-digit", day: "2-digit", timeZone: NZ_TIMEZONE
@@ -578,15 +625,19 @@
       const sunriseNz = toNzWallClock(sun.sunrise);
       const sunsetNz = toNzWallClock(sun.sunset);
 
-      const suggestedStart = new Date(tideNz.getTime() - 3.5 * 60 * 60 * 1000);
+      const suggestedStart = new Date(tideNz.getTime() - 4 * 60 * 60 * 1000);
 
       const tideMinutes = tideNz.getHours() * 60 + tideNz.getMinutes();
       const sunriseMinutes = sunriseNz.getHours() * 60 + sunriseNz.getMinutes();
       const sunsetMinutes = sunsetNz.getHours() * 60 + sunsetNz.getMinutes();
-      const suggestedStartMinutes = tideMinutes - 210;
+      const suggestedStartMinutes = tideMinutes - 240;
       const startAfterSunrise = suggestedStartMinutes >= sunriseMinutes;
       const estimatedFinishMinutes = suggestedStartMinutes + 8 * 60;
       const beforeSunset = estimatedFinishMinutes <= sunsetMinutes;
+      const startBufferMinutes = suggestedStartMinutes - sunriseMinutes;
+      const finishBufferMinutes = sunsetMinutes - estimatedFinishMinutes;
+      const nearDawn = startBufferMinutes <= 60;
+      const nearDusk = finishBufferMinutes <= 90;
 
       const hour = tideMinutes / 60;
       const middayScore = 1 - Math.min(1, Math.abs(hour - 12) / 8);
@@ -601,9 +652,25 @@
       } else if (!beforeSunset) {
         note = "Finishing in the dark.";
       } else if (score >= 90 && score <= 95) {
-        note = "Good days to ride";
+        if (nearDawn && nearDusk) {
+          note = "Good - near dawn and near dusk";
+        } else if (nearDawn) {
+          note = "Good - near dawn";
+        } else if (nearDusk) {
+          note = "Good - near dusk";
+        } else {
+          note = "Good days to ride";
+        }
       } else if (score >= 80 && score < 90) {
-        note = "OK days to ride";
+        if (nearDawn && nearDusk) {
+          note = "OK - near dawn and near dusk";
+        } else if (nearDawn) {
+          note = "OK - near dawn";
+        } else if (nearDusk) {
+          note = "OK - near dusk";
+        } else {
+          note = "Good days to ride";
+        }
       }
 
       return {
@@ -629,7 +696,7 @@
         ? a.tide - b.tide
         : b.score - a.score);
       const strongestRows = currentRows
-        .filter(row => row.score > 95)
+        .filter(row => row.note === "Best days to ride" || row.note === "Good days to ride")
         .sort((a, b) => a.tide - b.tide);
       const best = strongestRows[0] || currentRows.reduce((strongest, row) => row.score > strongest.score ? row : strongest, currentRows[0]);
 
@@ -638,15 +705,17 @@
         : "No good days to ride";
 
       body.innerHTML = rows.map(row => {
-        const fitText = row.rideable ? `${row.score}%` : "NOT RIDEABLE";
         const fitBand = row.score >= 90 && row.score <= 95
           ? "blue"
           : row.score >= 80 && row.score < 90
             ? "orange"
             : "green";
-        const tagClass = row.rideable ? `tag ${fitBand}` : "tag bad";
         const rowClass = row.rideable ? `fit-${fitBand}` : "fit-conflict";
-        const highlight = row.note === "Best days to ride" ? " best" : "";
+        const highlight = row.note === "Best days to ride"
+          ? " best best-top"
+          : row.note === "Good days to ride"
+            ? " best"
+            : "";
 
         return `<tr class="${rowClass}${highlight}">
           <td><strong>${escapeHtml(formatDate(row.tide))}</strong></td>
@@ -654,12 +723,12 @@
           <td>${escapeHtml(formatTime(row.tide))} (${row.height.toFixed(2)}m)</td>
           <td>${escapeHtml(formatTime(new Date(row.suggestedStart.getTime() + 8 * 60 * 60 * 1000)))}</td>
           <td>${escapeHtml(formatTime(row.sunrise))} -> ${escapeHtml(formatTime(row.sunset))}</td>
-          <td><span class="${tagClass}">${escapeHtml(fitText)}</span></td>
+          <td>${renderStars(row.score)}</td>
           <td>${escapeHtml(row.note)}</td>
         </tr>`;
       }).join("");
 
-      resultCountEl.textContent = `${rows.length} day windows compared`;
+      resultCountEl.textContent = `${rows.length} days compared`;
     }
 
     sortButtons.forEach((sortButton) => {
