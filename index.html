@@ -592,6 +592,10 @@
       color: #245f8f;
     }
 
+    .ampm {
+      margin-left: 3px;
+    }
+
     .row-toggle {
       display: inline-flex;
       align-items: center;
@@ -726,12 +730,14 @@
       table { min-width: 0; }
       .col-score { display: none; }
       .col-lowtide { display: none; }
-      th { padding: 10px 8px; font-size: 9px; }
-      td { padding: 10px 8px; font-size: 13px; }
-      .tag { font-size: 9px; padding: 4px 6px; }
-      .score { font-size: 12px; min-width: 32px; padding: 4px 7px; }
+      th { padding: 8px 5px; font-size: 8px; letter-spacing: 0.04em; }
+      td { padding: 8px 5px; font-size: 12px; }
+      .tag { font-size: 8px; padding: 3px 4px; letter-spacing: 0.03em; }
+      .score { font-size: 11px; min-width: 28px; padding: 3px 5px; }
+      .row-toggle { font-size: 16px; padding: 2px; }
       .th-full { display: none; }
       .th-short { display: inline; }
+      .ampm { margin-left: 0; font-size: 0.7em; }
     }
   </style>
 </head>
@@ -858,6 +864,13 @@
       hour: "numeric", minute: "2-digit", timeZone: NZ_TIMEZONE
     }).format(value);
 
+    function formatTimeHtml(value) {
+      const formatted = formatTime(value);
+      const match = formatted.match(/^(.*?)\s*(am|pm)$/i);
+      if (!match) return escapeHtml(formatted);
+      return `${escapeHtml(match[1])}<span class="ampm">${escapeHtml(match[2])}</span>`;
+    }
+
     function getScoreClass(row) {
       if (!row.rideable) return "bad";
       if (row.note.startsWith("Good")) return "blue";
@@ -901,11 +914,11 @@
             <div class="timeline-point sunrise" style="left:${pct(sunriseMin)}%"></div>
             <div class="timeline-point sunset" style="left:${pct(sunsetMin)}%"></div>
             <div class="timeline-point tide" style="left:${pct(tideMin)}%"></div>
-            <div class="timeline-label above" style="left:${pct(startMin)}%"><strong>Start</strong>${escapeHtml(formatTime(row.suggestedStart))}</div>
-            <div class="timeline-label above" style="left:${pct(finishMin)}%"><strong>Finish</strong>${escapeHtml(formatTime(row.estimatedFinish))}</div>
-            <div class="timeline-label below" style="left:${pct(sunriseMin)}%"><strong>Sunrise</strong>${escapeHtml(formatTime(row.sunrise))}</div>
-            <div class="timeline-label below" style="left:${pct(sunsetMin)}%"><strong>Sunset</strong>${escapeHtml(formatTime(row.sunset))}</div>
-            <div class="timeline-label below" style="left:${pct(tideMin)}%"><a href="${tideUrl}" target="_blank" rel="noreferrer"><strong>Low tide</strong>${escapeHtml(formatTime(row.tide))} (${row.height.toFixed(2)}m)</a></div>
+            <div class="timeline-label above" style="left:${pct(startMin)}%"><strong>Start</strong>${formatTimeHtml(row.suggestedStart)}</div>
+            <div class="timeline-label above" style="left:${pct(finishMin)}%"><strong>Finish</strong>${formatTimeHtml(row.estimatedFinish)}</div>
+            <div class="timeline-label below" style="left:${pct(sunriseMin)}%"><strong>Sunrise</strong>${formatTimeHtml(row.sunrise)}</div>
+            <div class="timeline-label below" style="left:${pct(sunsetMin)}%"><strong>Sunset</strong>${formatTimeHtml(row.sunset)}</div>
+            <div class="timeline-label below" style="left:${pct(tideMin)}%"><a href="${tideUrl}" target="_blank" rel="noreferrer"><strong>Low tide</strong>${formatTimeHtml(row.tide)} (${row.height.toFixed(2)}m)</a></div>
           </div>
         </div>
       `;
@@ -1279,9 +1292,9 @@
 
         return `<tr class="${highlight}">
           <td><strong>${escapeHtml(formatDate(row.tide))}</strong></td>
-          <td>${escapeHtml(formatTime(row.suggestedStart))}</td>
-          <td class="col-lowtide">${escapeHtml(formatTime(row.tide))}</td>
-          <td>${escapeHtml(formatTime(row.estimatedFinish))}</td>
+          <td>${formatTimeHtml(row.suggestedStart)}</td>
+          <td class="col-lowtide">${formatTimeHtml(row.tide)}</td>
+          <td>${formatTimeHtml(row.estimatedFinish)}</td>
           <td><span class="tag${tagClass}${tagEmphasis}">${escapeHtml(row.note)}</span></td>
           <td class="col-score">${renderScore(row)}</td>
           <td><button type="button" class="row-toggle" data-toggle="${index}" aria-expanded="false" aria-label="Show details for ${escapeHtml(formatDate(row.tide))}">▾</button></td>
