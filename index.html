@@ -110,23 +110,35 @@
 
     .hero {
       display: grid;
-      grid-template-columns: minmax(320px, 640px) minmax(420px, 1fr);
+      grid-template-columns: 1fr;
       gap: 26px;
       align-items: start;
       margin-top: 18px;
     }
 
-    .hero-copy {
-      padding-top: 4px;
-    }
-
     .controls {
-      padding: 18px;
+      padding: 18px 16px 14px;
       display: flex;
       flex-direction: column;
       gap: 12px;
       align-self: start;
       min-width: 0;
+      width: 100%;
+      max-width: 520px;
+      margin: 0 auto;
+      border-color: var(--orange);
+      background: var(--panel);
+    }
+
+    .controls-heading {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin: 0 0 2px;
+      color: var(--ink);
+      font-size: 18px;
+      line-height: 1.2;
+      font-weight: 700;
     }
 
     .label {
@@ -204,8 +216,8 @@
       background: #fcfbf6;
       color: var(--ink);
       padding: 11px 12px;
-      font-size: 15px;
-      font-weight: 600;
+      font-size: 18px;
+      font-weight: 700;
       cursor: pointer;
     }
 
@@ -214,8 +226,9 @@
     }
 
     .month-picker-chevron {
-      color: var(--muted);
-      font-size: 12px;
+      color: var(--orange);
+      font-size: 18px;
+      font-weight: 700;
       transition: transform 0.2s;
     }
 
@@ -349,12 +362,13 @@
     .summary-bar {
       display: flex;
       align-items: center;
-      justify-content: flex-start;
+      justify-content: space-between;
       cursor: pointer;
       width: 100%;
       max-width: none;
       gap: 12px;
       margin-top: 14px;
+      margin-bottom: 8px;
       padding: 18px 20px;
       background: linear-gradient(180deg, var(--green-faint), #f8f7ef);
       min-height: 76px;
@@ -427,33 +441,6 @@
       margin: 4px 0 0;
       color: var(--muted);
       font-size: 15px;
-    }
-
-    .sort-toggle {
-      display: inline-flex;
-      background: var(--green-faint);
-      border-radius: 20px;
-      padding: 4px;
-      gap: 4px;
-      flex: 0 0 auto;
-    }
-
-    .sort-button {
-      border: 0;
-      background: transparent;
-      padding: 8px 16px;
-      border-radius: 16px;
-      font-size: 11px;
-      font-weight: bold;
-      color: var(--muted);
-      cursor: pointer;
-      transition: background 0.2s, color 0.2s, box-shadow 0.2s;
-    }
-
-    .sort-button.active {
-      background: #fff;
-      color: var(--green);
-      box-shadow: 0 1px 3px rgba(31, 52, 44, 0.15);
     }
 
     .small {
@@ -570,6 +557,7 @@
       border-radius: 4px;
       font-size: 14px;
       font-weight: bold;
+      cursor: help;
     }
 
     .score.good {
@@ -590,6 +578,39 @@
     .score.blue {
       background: #dceaf6;
       color: #245f8f;
+    }
+
+    .score-popup {
+      position: fixed;
+      z-index: 20;
+      width: min(320px, calc(100vw - 28px));
+      padding: 14px 16px;
+      border: 1px solid var(--line-strong);
+      border-radius: 6px;
+      background: #fffef9;
+      box-shadow: 0 10px 24px rgba(31, 52, 44, 0.18);
+      color: var(--ink);
+      font-size: 12px;
+      line-height: 1.45;
+      pointer-events: none;
+    }
+
+    .score-popup[hidden] {
+      display: none;
+    }
+
+    .score-popup h3 {
+      margin: 0 0 8px;
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .score-popup p {
+      margin: 4px 0;
+    }
+
+    .score-popup strong {
+      color: var(--green);
     }
 
     .ampm {
@@ -716,6 +737,7 @@
       .mark { display: none; }
       .summary-bar { grid-template-columns: 1fr; gap: 10px; }
       .summary-divider { display: none; }
+      #result-count { display: none; }
     }
 
     @media (max-width: 760px) {
@@ -753,19 +775,13 @@
     </header>
 
     <section class="hero" aria-label="Ride start planner">
-      <div class="hero-copy">
-        <div class="summary-bar panel" aria-live="polite" role="button" tabindex="0" id="summary-bar">
-          <div class="summary-count"><span class="summary-check" aria-hidden="true">✓</span><span id="summary-count">Waiting for a date range</span></div>
-        </div>
-      </div>
-
       <form class="panel controls" id="planner-form">
+        <h2 class="controls-heading">When are you riding?</h2>
         <div class="dates">
           <div class="date-row">
             <div class="date-field">
-              <label class="label" for="month-picker-toggle">Select month</label>
               <div class="month-picker" id="month-picker">
-                <button type="button" class="month-picker-toggle" id="month-picker-toggle" aria-haspopup="true" aria-expanded="false">
+                <button type="button" class="month-picker-toggle" id="month-picker-toggle" aria-label="Choose month" aria-haspopup="true" aria-expanded="false">
                   <span id="month-picker-label">Select a month</span>
                   <span class="month-picker-chevron" aria-hidden="true">▾</span>
                 </button>
@@ -781,19 +797,14 @@
     </section>
 
     <div class="notice" id="notice"></div>
+    <div class="score-popup" id="score-popup" role="status" hidden></div>
 
     <section class="results" id="results">
-      <div class="results-head">
-        <!-- <div>
-          <h2>Suitable ride dates</h2>
-          <p class="results-lead">All of these dates meet the tide and daylight criteria.</p>
-        </div> -->
-        <div class="sort-toggle" role="group" aria-label="Sort order">
-          <button type="button" class="sort-button" data-sort="score">Best days</button>
-          <button type="button" class="sort-button active" data-sort="date">Date order</button>
-        </div>
+      <div class="summary-bar panel" aria-live="polite" role="button" tabindex="0" id="summary-bar">
+        <div class="summary-count"><span class="summary-check" aria-hidden="true">✓</span><span id="summary-count">Waiting for a date range</span></div>
         <span class="small" id="result-count">Waiting for a date range</span>
       </div>
+
       <div class="table-wrap">
         <table>
           <thead>
@@ -840,6 +851,7 @@
     const monthPickerYears = document.querySelector("#month-picker-years");
     const monthPickerMonths = document.querySelector("#month-picker-months");
     const notice = document.querySelector("#notice");
+    const scorePopup = document.querySelector("#score-popup");
     const body = document.querySelector("#results-body");
     const sortButtons = document.querySelectorAll(".sort-button");
     const sortableHeaders = document.querySelectorAll("th.sortable");
@@ -880,7 +892,73 @@
     }
 
     function renderScore(row) {
-      return `<span class="score ${getScoreClass(row)}">${row.score}</span>`;
+      const breakdown = row.scoreBreakdown;
+      const explanation = `Score ${row.score}/100 - ${getScoreLabel(row)}. Daylight: ${breakdown.startAfterSunrise && breakdown.beforeSunset ? "good" : "tight"}. Start margin: ${Math.round(breakdown.startBufferPoints)}/15. Finish margin: ${Math.round(breakdown.finishBufferPoints)}/15.`;
+      return `<span class="score ${getScoreClass(row)}" data-score-date="${escapeHtml(row.date)}" tabindex="0" title="${escapeHtml(explanation)}" aria-label="${escapeHtml(explanation)}">${row.score}</span>`;
+    }
+
+    function formatDuration(minutes) {
+      const roundedMinutes = Math.max(0, Math.round(minutes));
+      const hours = Math.floor(roundedMinutes / 60);
+      const remainingMinutes = roundedMinutes % 60;
+      if (!hours) return `${remainingMinutes} min`;
+      if (!remainingMinutes) return `${hours} hr`;
+      return `${hours} hr ${remainingMinutes} min`;
+    }
+
+    function getScoreLabel(row) {
+      if (!row.rideable) return "Not suitable";
+      if (row.note.startsWith("Best")) return "Best option";
+      if (row.note.startsWith("Good")) return "Good option";
+      if (row.note.startsWith("OK")) return "Okay option";
+      return "Tight option";
+    }
+
+    function renderScorePopup(row) {
+      const breakdown = row.scoreBreakdown;
+      const daylightPoints = (breakdown.startAfterSunrise ? 35 : 0) + (breakdown.beforeSunset ? 35 : 0);
+      const daylightNote = breakdown.startAfterSunrise && breakdown.beforeSunset
+        ? "Entire ride is in daylight"
+        : !breakdown.startAfterSunrise && !breakdown.beforeSunset
+          ? "Starts before sunrise and finishes after sunset"
+          : !breakdown.startAfterSunrise
+            ? "Starts before sunrise"
+            : "Finishes after sunset";
+      const startNote = breakdown.startBufferMinutes >= 0
+        ? `${formatDuration(breakdown.startBufferMinutes)} after sunrise`
+        : `${formatDuration(-breakdown.startBufferMinutes)} before sunrise`;
+      const finishNote = breakdown.finishBufferMinutes >= 0
+        ? `${formatDuration(breakdown.finishBufferMinutes)} before sunset`
+        : `${formatDuration(-breakdown.finishBufferMinutes)} after sunset`;
+      const tideNote = breakdown.tideTooHigh
+        ? `<p><strong>Tide:</strong> Not suitable - too high to cross, so the final score is 0</p>`
+        : "";
+
+      return `<h3>Score ${row.score} - ${getScoreLabel(row)}</h3>
+        <p><strong>Daylight:</strong> ${daylightPoints}/70 - ${daylightNote}</p>
+        <p><strong>Start margin:</strong> ${Math.round(breakdown.startBufferPoints)}/15 - ${startNote}</p>
+        <p><strong>Finish margin:</strong> ${Math.round(breakdown.finishBufferPoints)}/15 - ${finishNote}</p>
+        ${tideNote}`;
+    }
+
+    function hideScorePopup() {
+      scorePopup.hidden = true;
+    }
+
+    function showScorePopup(scoreElement) {
+      const row = currentRows.find(candidate => candidate.date === scoreElement.dataset.scoreDate);
+      if (!row || !row.scoreBreakdown) return;
+
+      scorePopup.innerHTML = renderScorePopup(row);
+      scorePopup.hidden = false;
+
+      const scoreRect = scoreElement.getBoundingClientRect();
+      const popupRect = scorePopup.getBoundingClientRect();
+      const left = Math.max(14, Math.min(scoreRect.left, window.innerWidth - popupRect.width - 14));
+      const fitsBelow = scoreRect.bottom + popupRect.height + 8 <= window.innerHeight - 14;
+      const top = fitsBelow ? scoreRect.bottom + 8 : Math.max(14, scoreRect.top - popupRect.height - 8);
+      scorePopup.style.left = `${left}px`;
+      scorePopup.style.top = `${top}px`;
     }
 
     function minutesOfDay(date) {
@@ -963,7 +1041,7 @@
     }
 
     function getMaxYear() {
-      return getMinYear() + 10;
+      return getMinYear() + 3;
     }
 
     function getMinMonth() {
@@ -977,8 +1055,8 @@
     function renderMonthPickerYears() {
       const minYear = getMinYear();
       const maxYear = getMaxYear();
-      const startYear = Math.min(Math.max(selectedYear - 2, minYear), maxYear - 5);
-      const years = Array.from({ length: 6 }, (_, index) => startYear + index).filter(year => year <= maxYear);
+      const startYear = Math.min(Math.max(selectedYear - 2, minYear), maxYear - 3);
+      const years = Array.from({ length: 4 }, (_, index) => startYear + index).filter(year => year <= maxYear);
       monthPickerYears.innerHTML = years.map(year => (
         `<button type="button" class="month-picker-year${year === selectedYear ? " selected" : ""}" data-year="${year}">${year}</button>`
       )).join("");
@@ -1177,7 +1255,7 @@
       const score = Math.round(daylightScore + bufferScore * 30);
       const tideTooHigh = candidate.tide.height > LOW_TIDE_MAX_METERS;
 
-      let note = "Best days to ride";
+      let note = "Best day to ride";
       if (tideTooHigh) {
         note = "Tide too high to cross";
       } else if (!startAfterSunrise && !beforeSunset) {
@@ -1194,7 +1272,7 @@
         } else if (nearDusk) {
           note = "Good - near dusk";
         } else {
-          note = "Good days to ride";
+          note = "Good day to ride";
         }
       } else if (score >= 80 && score < 90) {
         if (nearDawn && nearDusk) {
@@ -1204,7 +1282,7 @@
         } else if (nearDusk) {
           note = "OK - near dusk";
         } else {
-          note = "OK days to ride";
+          note = "OK day to ride";
         }
       } else if (score < 80) {
         if (nearDawn && nearDusk) {
@@ -1228,6 +1306,17 @@
         estimatedFinish,
         rideable: !tideTooHigh && startAfterSunrise && beforeSunset,
         score: tideTooHigh ? 0 : score,
+        scoreBreakdown: {
+          tideTooHigh,
+          tideHeight: candidate.tide.height,
+          tideLimit: LOW_TIDE_MAX_METERS,
+          startAfterSunrise,
+          beforeSunset,
+          startBufferMinutes,
+          finishBufferMinutes,
+          startBufferPoints: startBufferScore * 15,
+          finishBufferPoints: finishBufferScore * 15
+        },
         note
       };
     }
@@ -1273,9 +1362,9 @@
       }
 
       body.innerHTML = visibleRows.length ? visibleRows.map((row, index) => {
-        const highlight = row.note === "Best days to ride"
+        const highlight = row.note === "Best day to ride"
           ? " best best-top"
-          : row.note === "Good days to ride"
+          : row.note === "Good day to ride"
             ? " best"
             : row.rideable
               ? ""
@@ -1288,7 +1377,7 @@
             : row.note.startsWith("OK") || row.note.startsWith("Tight")
               ? " orange"
               : "";
-        const tagEmphasis = row.note === "Best days to ride" ? " emphasis" : "";
+        const tagEmphasis = row.note === "Best day to ride" ? " emphasis" : "";
 
         return `<tr class="${highlight}">
           <td><strong>${escapeHtml(formatDate(row.tide))}</strong></td>
@@ -1460,6 +1549,27 @@
           setSort(th.dataset.sortKey);
         }
       });
+    });
+
+    body.addEventListener("pointerover", event => {
+      const score = event.target.closest(".score");
+      if (!score || (event.relatedTarget && score.contains(event.relatedTarget))) return;
+      showScorePopup(score);
+    });
+
+    body.addEventListener("pointerout", event => {
+      const score = event.target.closest(".score");
+      if (!score || (event.relatedTarget && score.contains(event.relatedTarget))) return;
+      hideScorePopup();
+    });
+
+    body.addEventListener("focusin", event => {
+      const score = event.target.closest(".score");
+      if (score) showScorePopup(score);
+    });
+
+    body.addEventListener("focusout", event => {
+      if (event.target.closest(".score")) hideScorePopup();
     });
 
     body.addEventListener("click", event => {
