@@ -1,0 +1,20 @@
+$env:NIWA_API_KEY = "H5FBhCSzzmDcsoLtGTv1ViUtFDWFHzDZ" 
+
+Set-Location "C:\Users\Chris\Documents\GitHub\90MileRide"
+
+.\scripts\generate-static-tides.ps1 -StartYear 2043 -EndYear 2043
+
+Write-Host "2031 complete — waiting 15 seconds..."
+Start-Sleep -Seconds 15
+
+foreach ($year in 2043..2053) {
+    Write-Host "Downloading tide data for $year..."
+    .\scripts\generate-static-tides.ps1 -StartYear $year -EndYear $year
+
+    if ($year -lt 2100) {
+        Write-Host "$year complete — waiting 15 seconds..."
+        Start-Sleep -Seconds 15
+    }
+}
+
+Write-Host "FINISHED."

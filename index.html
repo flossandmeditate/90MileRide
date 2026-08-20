@@ -6,17 +6,19 @@
   <title>90 Mile Ride | Tour Aotearoa Start Planner</title>
   <style>
     :root {
-      --ink: #15231f;
-      --muted: #62736c;
-      --paper: #f4f0e6;
+      --ink: #0f2d2a;
+      --muted: #5e716d;
+      --paper: #f7f4ea;
       --panel: #fffdf8;
-      --line: #d9d8ca;
-      --green: #1d624e;
-      --green-soft: #dce9d8;
-      --orange: #e9783f;
-      --yellow: #f6d762;
-      --red: #bd563f;
-      --shadow: 0 18px 50px rgba(35, 53, 42, 0.11);
+      --line: #dbd8cc;
+      --line-strong: #c9c5b8;
+      --green: #1d6a50;
+      --green-soft: #dfe9db;
+      --green-faint: #eff4ea;
+      --orange: #ef7a44;
+      --yellow: #f7d96e;
+      --red: #b9583f;
+      --shadow: 0 18px 40px rgba(31, 52, 44, 0.08);
     }
 
     * { box-sizing: border-box; }
@@ -33,9 +35,9 @@
     }
 
     .shell {
-      max-width: 1180px;
+      max-width: 1200px;
       margin: 0 auto;
-      padding: 28px 24px 60px;
+      padding: 26px 22px 56px;
     }
 
     header {
@@ -43,7 +45,9 @@
       justify-content: space-between;
       gap: 24px;
       align-items: flex-start;
-      margin-bottom: 34px;
+      padding-bottom: 16px;
+      margin-bottom: 18px;
+      border-bottom: 1px solid var(--line);
     }
 
     .eyebrow,
@@ -60,30 +64,32 @@
 
     .eyebrow {
       color: var(--orange);
-      font-size: 12px;
+      font-size: 11px;
       font-weight: bold;
     }
 
     h1 {
-      max-width: 760px;
-      margin: 9px 0 0;
-      font-size: clamp(40px, 6vw, 74px);
-      line-height: 0.95;
-      font-weight: 500;
-      letter-spacing: -0.04em;
+      max-width: 100%;
+      margin: 10px 0 0;
+      font-size: clamp(42px, 5vw, 150px);
+      line-height: 0.72;
+      font-weight: 700;
+      letter-spacing: -0.065em;
     }
 
     .intro {
-      max-width: 720px;
+      width: 100%;
+      max-width: none;
       color: var(--muted);
-      font-size: 18px;
-      line-height: 1.45;
-      margin: 18px 0 0;
+      font-size: 17px;
+      line-height: 1.4;
+      margin: 22px 0 0;
     }
 
     .mark {
-      color: var(--green);
-      font: bold 14px -apple-system, BlinkMacSystemFont, "SF Pro Text", Helvetica, Arial, sans-serif;
+      display: none;
+      color: #36514c;
+      font: 500 13px -apple-system, BlinkMacSystemFont, "SF Pro Text", Helvetica, Arial, sans-serif;
       text-align: right;
     }
 
@@ -95,25 +101,32 @@
       margin-top: 5px;
     }
 
-    .planner {
-      display: grid;
-      grid-template-columns: 1fr 1.35fr;
-      gap: 22px;
-      align-items: stretch;
-    }
-
     .panel {
       background: var(--panel);
       border: 1px solid var(--line);
-      border-radius: 7px;
+      border-radius: 8px;
       box-shadow: var(--shadow);
     }
 
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(320px, 640px) minmax(420px, 1fr);
+      gap: 26px;
+      align-items: start;
+      margin-top: 18px;
+    }
+
+    .hero-copy {
+      padding-top: 4px;
+    }
+
     .controls {
-      padding: 25px;
+      padding: 18px;
       display: flex;
       flex-direction: column;
-      gap: 15px;
+      gap: 12px;
+      align-self: start;
+      min-width: 0;
     }
 
     .label {
@@ -125,19 +138,28 @@
     }
 
     .dates {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      width: 100%;
+    }
+
+    .date-row {
       display: grid;
-      grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
-      gap: 10px;
+      grid-template-columns: minmax(0, 1fr);
+      gap: 12px;
       align-items: end;
+      width: 100%;
     }
 
     .date-field {
       min-width: 0;
+      position: relative;
     }
 
     .date-separator {
       color: var(--muted);
-      padding-bottom: 12px;
+      padding-bottom: 11px;
       font: 11px -apple-system, BlinkMacSystemFont, "SF Pro Text", Helvetica, Arial, sans-serif;
       text-transform: uppercase;
       letter-spacing: 0.08em;
@@ -147,11 +169,145 @@
     input[type="text"],
     input[type="file"] {
       width: 100%;
+      min-width: 0;
       border: 1px solid var(--line);
-      border-radius: 3px;
-      background: #fbfaf4;
+      border-radius: 4px;
+      background: #fcfbf6;
       color: var(--ink);
-      padding: 11px;
+      padding: 11px 12px 11px 40px;
+      font-size: 15px;
+      appearance: none;
+      -webkit-appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%235e716d' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='5' width='18' height='16' rx='2'/%3E%3Cpath d='M8 3v4M16 3v4M3 10h18'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: 12px center;
+      background-size: 18px 18px;
+    }
+
+    input[type="date"]::-webkit-calendar-picker-indicator {
+      opacity: 0;
+      width: 0;
+      margin: 0;
+    }
+
+    .month-picker {
+      position: relative;
+    }
+
+    .month-picker-toggle {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      background: #fcfbf6;
+      color: var(--ink);
+      padding: 11px 12px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .month-picker-toggle:hover {
+      border-color: var(--green);
+    }
+
+    .month-picker-chevron {
+      color: var(--muted);
+      font-size: 12px;
+      transition: transform 0.2s;
+    }
+
+    .month-picker-toggle[aria-expanded="true"] .month-picker-chevron {
+      transform: rotate(180deg);
+    }
+
+    .month-picker-panel {
+      position: absolute;
+      z-index: 20;
+      top: calc(100% + 8px);
+      left: 0;
+      display: flex;
+      gap: 14px;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+      padding: 14px;
+      min-width: 320px;
+    }
+
+    .month-picker-panel[hidden] {
+      display: none;
+    }
+
+    .month-picker-years {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      padding-right: 12px;
+      border-right: 1px solid var(--line);
+      max-height: 180px;
+      overflow-y: auto;
+    }
+
+    .month-picker-year {
+      border: 0;
+      background: transparent;
+      padding: 8px 14px;
+      border-radius: 4px;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--ink);
+      cursor: pointer;
+      text-align: left;
+      white-space: nowrap;
+    }
+
+    .month-picker-year:hover {
+      background: var(--green-faint);
+    }
+
+    .month-picker-year.selected {
+      background: var(--green);
+      color: #fff;
+    }
+
+    .month-picker-months {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 4px;
+      align-content: start;
+    }
+
+    .month-picker-month {
+      border: 0;
+      background: transparent;
+      padding: 10px 14px;
+      border-radius: 4px;
+      font-size: 14px;
+      color: var(--ink);
+      cursor: pointer;
+    }
+
+    .month-picker-month:hover {
+      background: var(--green-faint);
+    }
+
+    .month-picker-month.selected {
+      background: var(--green);
+      color: #fff;
+      font-weight: 600;
+    }
+
+    .month-picker-month.disabled {
+      color: var(--line-strong);
+      cursor: not-allowed;
+    }
+
+    .month-picker-month.disabled:hover {
+      background: transparent;
     }
 
     .help {
@@ -161,18 +317,22 @@
     }
 
     .button {
-      display: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
       width: 100%;
-      margin-top: 8px;
+      min-height: 52px;
+      margin-top: 0;
       cursor: pointer;
       border: 0;
-      border-radius: 3px;
-      padding: 15px 18px;
+      border-radius: 6px;
+      padding: 13px 18px;
       color: #fff;
       background: var(--green);
       font-size: 14px;
       font-weight: bold;
-      transition: background 0.2s, transform 0.2s;
+      transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+      box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.12);
     }
 
     .button:hover {
@@ -186,53 +346,58 @@
       transform: none;
     }
 
-    .hero-result {
-      position: relative;
-      overflow: hidden;
-      padding: 29px;
+    .summary-bar {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      cursor: pointer;
+      width: 100%;
+      max-width: none;
+      gap: 12px;
+      margin-top: 14px;
+      padding: 18px 20px;
+      background: linear-gradient(180deg, var(--green-faint), #f8f7ef);
+      min-height: 76px;
+    }
+
+    .summary-count {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 18px;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      white-space: nowrap;
+    }
+
+    .summary-check {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
       background: var(--green);
       color: #fff;
-    }
-
-    .hero-result:after {
-      content: "";
-      position: absolute;
-      right: -45px;
-      bottom: -80px;
-      width: 250px;
-      height: 250px;
-      border: 1px solid rgba(255, 255, 255, 0.25);
-      border-radius: 50%;
-      box-shadow: 0 0 0 28px rgba(255, 255, 255, 0.06), 0 0 0 57px rgba(255, 255, 255, 0.04);
-    }
-
-    .hero-result .eyebrow {
-      color: var(--yellow);
-      position: relative;
-      z-index: 1;
-    }
-
-    .result-date {
-      position: relative;
-      z-index: 1;
-      margin: 24px 0 4px;
-      font-size: clamp(30px, 4vw, 54px);
+      font-size: 18px;
       line-height: 1;
+      flex: 0 0 auto;
     }
 
-    .result-date-list {
-      display: block;
-      max-width: 580px;
-      font-size: clamp(23px, 3vw, 36px);
-      line-height: 1.25;
+    .summary-divider {
+      width: 1px;
+      height: 26px;
+      background: var(--line-strong);
+      justify-self: center;
     }
 
-    .result-date-list span {
-      display: block;
+    .summary-note {
+      color: var(--muted);
+      font-size: 15px;
     }
 
     .notice {
-      margin-top: 18px;
+      margin-top: 16px;
       color: var(--muted);
       font: 13px -apple-system, BlinkMacSystemFont, "SF Pro Text", Helvetica, Arial, sans-serif;
     }
@@ -240,7 +405,7 @@
     .notice.error { color: var(--red); }
 
     .results {
-      margin-top: 34px;
+      margin-top: 22px;
     }
 
     .results-head {
@@ -248,45 +413,51 @@
       align-items: baseline;
       justify-content: space-between;
       gap: 15px;
-      margin-bottom: 13px;
-    }
-
-    .sort-controls {
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      padding: 3px;
-      border: 1px solid var(--line);
-      border-radius: 4px;
-      background: rgba(255, 253, 248, 0.7);
-    }
-
-    .sort-button {
-      border: 0;
-      border-radius: 2px;
-      padding: 8px 10px;
-      color: var(--muted);
-      background: transparent;
-      cursor: pointer;
-      font: bold 10px -apple-system, BlinkMacSystemFont, "SF Pro Text", Helvetica, Arial, sans-serif;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-    }
-
-    .sort-button:hover,
-    .sort-button.active {
-      color: var(--green);
-      background: var(--green-soft);
+      margin-bottom: 12px;
     }
 
     h2 {
       margin: 0;
-      font-size: 30px;
-      font-weight: 500;
+      font-size: 28px;
+      font-weight: 600;
+      letter-spacing: -0.03em;
+    }
+
+    .results-lead {
+      margin: 4px 0 0;
+      color: var(--muted);
+      font-size: 15px;
+    }
+
+    .sort-toggle {
+      display: inline-flex;
+      background: var(--green-faint);
+      border-radius: 20px;
+      padding: 4px;
+      gap: 4px;
+      flex: 0 0 auto;
+    }
+
+    .sort-button {
+      border: 0;
+      background: transparent;
+      padding: 8px 16px;
+      border-radius: 16px;
+      font-size: 11px;
+      font-weight: bold;
+      color: var(--muted);
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+    }
+
+    .sort-button.active {
+      background: #fff;
+      color: var(--green);
+      box-shadow: 0 1px 3px rgba(31, 52, 44, 0.15);
     }
 
     .small {
-      font-size: 10px;
+      font-size: 12px;
       color: var(--muted);
     }
 
@@ -294,12 +465,12 @@
       overflow-x: auto;
       background: var(--panel);
       border: 1px solid var(--line);
-      border-radius: 6px;
+      border-radius: 8px;
     }
 
     table {
       width: 100%;
-      min-width: 820px;
+      min-width: 760px;
       border-collapse: collapse;
     }
 
@@ -307,30 +478,63 @@
       text-align: left;
       padding: 14px 16px;
       color: var(--muted);
-      background: #e9eee4;
+      background: #eef0e6;
       font-size: 10px;
     }
 
+    th.sortable {
+      cursor: pointer;
+      user-select: none;
+    }
+
+    th.sortable:hover {
+      color: var(--green);
+    }
+
+    .sort-arrow {
+      display: inline-block;
+      margin-left: 4px;
+      opacity: 0.35;
+    }
+
+    th.sortable.active .sort-arrow {
+      opacity: 1;
+      color: var(--green);
+    }
+
+    .th-short { display: none; }
+
     td {
-      padding: 16px;
-      border-top: 1px solid #e5e5d9;
+      padding: 14px 16px;
+      border-top: 1px solid #e7e3d8;
       font-size: 15px;
       white-space: nowrap;
     }
 
-    tr.best { background: #fff8db; }
+    tr.best { background: #fff9e6; }
 
-    tr.best-top { background: #ffeec2; }
+    tr.best-top { background: #fef0c8; }
 
     tr.best td:first-child {
       border-left: 4px solid var(--orange);
       padding-left: 12px;
     }
 
+    tr.row-bad { background: #fbe3dc; }
+
+    tr.row-bad td:first-child {
+      border-left: 4px solid var(--red);
+      padding-left: 12px;
+    }
+
+    tr.row-bad td {
+      border-top-color: #f2c9bd;
+    }
+
     .tag {
       display: inline-block;
       padding: 5px 7px;
-      border-radius: 2px;
+      border-radius: 3px;
       background: var(--green-soft);
       color: var(--green);
       font: bold 10px -apple-system, BlinkMacSystemFont, "SF Pro Text", Helvetica, Arial, sans-serif;
@@ -353,36 +557,149 @@
       color: var(--red);
     }
 
-    .stars {
+    .tag.emphasis {
+      font-weight: 900;
+    }
+
+    .score {
       display: inline-flex;
       align-items: center;
-      gap: 2px;
-      font-size: 19px;
+      justify-content: center;
+      min-width: 40px;
+      padding: 5px 9px;
+      border-radius: 4px;
+      font-size: 14px;
+      font-weight: bold;
+    }
+
+    .score.good {
+      background: var(--green-soft);
+      color: var(--green);
+    }
+
+    .score.ok {
+      background: #fbe6d3;
+      color: #a9571f;
+    }
+
+    .score.bad {
+      background: #fbe3dc;
+      color: var(--red);
+    }
+
+    .score.blue {
+      background: #dceaf6;
+      color: #245f8f;
+    }
+
+    .row-toggle {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 0;
+      background: transparent;
+      color: var(--muted);
+      cursor: pointer;
+      font-size: 20px;
       line-height: 1;
+      padding: 4px;
+      transition: transform 0.2s, color 0.2s;
+    }
+
+    .row-toggle:hover {
+      color: var(--green);
+    }
+
+    .row-toggle.expanded {
+      transform: rotate(180deg);
+      color: var(--green);
+    }
+
+    tr.detail-row {
+      background: #f6f4ea;
+    }
+
+    tr.detail-row td {
+      padding: 44px 16px 20px;
+      white-space: normal;
+    }
+
+    .timeline {
+      margin: 0 0 36px;
+    }
+
+    .timeline-track {
+      position: relative;
+      height: 10px;
+      background: #e4e1d3;
+      border-radius: 6px;
+    }
+
+    .timeline-daylight {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      background: #d7cdeb;
+      border-radius: 6px;
+    }
+
+    .timeline-ride {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      background: var(--green);
+      opacity: 0.55;
+      border-radius: 6px;
+    }
+
+    .timeline-point {
+      position: absolute;
+      top: 50%;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      border: 2px solid #fff;
+      box-shadow: 0 0 0 1px rgba(31, 52, 44, 0.2);
+      transform: translate(-50%, -50%);
+    }
+
+    .timeline-point.sunrise { background: #f2ad1f; }
+    .timeline-point.sunset { background: #a9571f; }
+    .timeline-point.tide { background: #245f8f; }
+
+    .timeline-label {
+      position: absolute;
+      transform: translateX(-50%);
+      font-size: 10px;
+      color: var(--muted);
+      text-align: center;
       white-space: nowrap;
     }
 
-    .star {
-      display: inline-block;
-      transform-origin: 50% 55%;
+    .timeline-label.above { bottom: 18px; }
+    .timeline-label.below { top: 18px; }
+
+    .timeline-label strong {
+      display: block;
+      color: var(--ink);
+      font-size: 11px;
     }
 
-    .star.filled {
-      color: #f2ad1f;
-      text-shadow: 0 0 8px rgba(242, 173, 31, 0.45), 0 1px 0 rgba(128, 75, 17, 0.35);
+    .timeline-label a {
+      color: inherit;
+      text-decoration: none;
     }
 
-    .star.empty {
-      color: #cdbf9f;
-      text-shadow: 0 1px 0 rgba(255, 255, 255, 0.55);
+    .timeline-label a:hover {
+      text-decoration: underline;
     }
 
-    tr.best-top .star.filled {
-      color: #f7bc35;
+    .timeline-label a:hover strong {
+      color: var(--green);
     }
 
     footer {
-      margin-top: 28px;
+      margin-top: 20px;
       color: var(--muted);
       font: 12px -apple-system, BlinkMacSystemFont, "SF Pro Text", Helvetica, Arial, sans-serif;
       line-height: 1.5;
@@ -391,19 +708,30 @@
     footer a { color: var(--green); }
 
     @media (max-width: 900px) {
-      .planner { grid-template-columns: 1fr; }
+      .hero { grid-template-columns: 1fr; }
       .mark { display: none; }
+      .summary-bar { grid-template-columns: 1fr; gap: 10px; }
+      .summary-divider { display: none; }
     }
 
     @media (max-width: 760px) {
-      .shell { padding: 22px 15px 40px; }
-      header { margin-bottom: 30px; }
-      .controls, .hero-result { padding: 21px; }
-      .dates { grid-template-columns: 1fr 1fr; gap: 12px; }
+      .shell { padding: 18px 14px 34px; }
+      header { margin-bottom: 16px; padding-bottom: 14px; }
+      h1 { font-size: clamp(32px, 10vw, 46px); line-height: 1.05; letter-spacing: -0.03em; }
+      .intro { font-size: 16px; }
+      .controls { padding: 15px; }
+      .date-row { grid-template-columns: 1fr; gap: 12px; }
       .date-separator { display: none; }
       .results-head { align-items: flex-start; flex-direction: column; }
-      .sort-controls { width: 100%; }
-      .sort-button { flex: 1; }
+      table { min-width: 0; }
+      .col-score { display: none; }
+      .col-lowtide { display: none; }
+      th { padding: 10px 8px; font-size: 9px; }
+      td { padding: 10px 8px; font-size: 13px; }
+      .tag { font-size: 9px; padding: 4px 6px; }
+      .score { font-size: 12px; min-width: 32px; padding: 4px 7px; }
+      .th-full { display: none; }
+      .th-short { display: inline; }
     }
   </style>
 </head>
@@ -411,44 +739,52 @@
   <main class="shell">
     <header>
       <div>
-        <div class="eyebrow">Tour Aotearoa</div>
+        <div class="eyebrow">Tour Aotearoa - KENNETT BROTHERS</div>
         <h1>Biking 90 Mile Beach</h1>
-        <p class="intro">Plan the best start <b>time/date</b> for riding 90 Mile Beach <b>from Cape Reinga</b> - based on tide and daylight.</p>
+        <p class="intro">Plan the best start time/date for riding 90 Mile Beach from Cape Reinga - based on tide and daylight.</p>
       </div>
       <div class="mark"><span>The Kennett Brothers</span></div>
     </header>
 
-    <section class="planner" aria-label="Ride start planner">
+    <section class="hero" aria-label="Ride start planner">
+      <div class="hero-copy">
+        <div class="summary-bar panel" aria-live="polite" role="button" tabindex="0" id="summary-bar">
+          <div class="summary-count"><span class="summary-check" aria-hidden="true">✓</span><span id="summary-count">Waiting for a date range</span></div>
+        </div>
+      </div>
+
       <form class="panel controls" id="planner-form">
         <div class="dates">
-          <div class="date-field">
-            <label class="label" for="start-date">Search from</label>
-            <input id="start-date" type="date" required>
-          </div>
-          <div class="date-separator" aria-hidden="true">to</div>
-          <div class="date-field">
-            <label class="label" for="end-date">Search to</label>
-            <input id="end-date" type="date" required>
+          <div class="date-row">
+            <div class="date-field">
+              <label class="label" for="month-picker-toggle">Select month</label>
+              <div class="month-picker" id="month-picker">
+                <button type="button" class="month-picker-toggle" id="month-picker-toggle" aria-haspopup="true" aria-expanded="false">
+                  <span id="month-picker-label">Select a month</span>
+                  <span class="month-picker-chevron" aria-hidden="true">▾</span>
+                </button>
+                <div class="month-picker-panel" id="month-picker-panel" hidden>
+                  <div class="month-picker-years" id="month-picker-years"></div>
+                  <div class="month-picker-months" id="month-picker-months"></div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-
-        <button class="button" id="calculate" type="submit">Calculate best days</button>
       </form>
-
-      <article class="panel hero-result" aria-live="polite">
-        <div class="eyebrow">Best dates to ride 90 mile</div>
-        <div class="result-date" id="best-date"></div>
-      </article>
     </section>
 
     <div class="notice" id="notice"></div>
 
-    <section class="results">
+    <section class="results" id="results">
       <div class="results-head">
-        <h2></h2>
-        <div class="sort-controls" aria-label="Sort start windows">
-          <button class="sort-button active" id="sort-best" type="button" data-sort="best">Best fit</button>
-          <button class="sort-button" id="sort-date" type="button" data-sort="date">Date order</button>
+        <!-- <div>
+          <h2>Suitable ride dates</h2>
+          <p class="results-lead">All of these dates meet the tide and daylight criteria.</p>
+        </div> -->
+        <div class="sort-toggle" role="group" aria-label="Sort order">
+          <button type="button" class="sort-button" data-sort="score">Best days</button>
+          <button type="button" class="sort-button active" data-sort="date">Date order</button>
         </div>
         <span class="small" id="result-count">Waiting for a date range</span>
       </div>
@@ -456,19 +792,27 @@
         <table>
           <thead>
             <tr>
-              <th>Date</th>
-              <th>Suggested start time</th>
-              <th>Low tide</th>
-              <th>Estimated finish time</th>
-              <th>Sunrise -> sunset</th>
-              <th>Stars</th>
-              <th>Notes</th>
+              <th class="sortable" data-sort-key="date">Date<span class="sort-arrow"></span></th>
+              <th class="sortable" data-sort-key="start"><span class="th-full">Suggested Start Time</span><span class="th-short">Start</span><span class="sort-arrow"></span></th>
+              <th class="sortable col-lowtide" data-sort-key="lowtide">Low tide<span class="sort-arrow"></span></th>
+              <th class="sortable" data-sort-key="finish"><span class="th-full">Estimated Finish Time</span><span class="th-short">Finish</span><span class="sort-arrow"></span></th>
+              <th class="sortable" data-sort-key="details">Details<span class="sort-arrow"></span></th>
+              <th class="sortable col-score" data-sort-key="score">Score<span class="sort-arrow"></span></th>
+              <th aria-label="Expand"></th>
             </tr>
           </thead>
           <tbody id="results-body">
             <tr><td colspan="7">Select a date range and calculate your best beach starts.</td></tr>
           </tbody>
         </table>
+      </div>
+
+      <div class="results-head" style="margin-top: 12px; align-items: center;">
+        <details class="panel" style="padding: 12px 16px; flex: 1;">
+          <summary style="cursor: pointer; font-weight: 500; list-style: none;">Why aren’t other dates suitable?</summary>
+          <div style="margin-top: 10px; color: var(--muted); font-size: 14px; line-height: 1.5;">These dates miss the tide and daylight window, start in the dark, or finish after sunset.</div>
+        </details>
+<button id="view-all-button" class="panel" type="button" style="min-width: 200px; min-height: 48px; border: 1px solid var(--green); color: var(--green); background: #f8fbf7; font-weight: 600; border-radius: 6px; cursor: pointer;">View all days</button>
       </div>
     </section>
 
@@ -483,17 +827,28 @@
     const LOW_TIDE_MAX_METERS = 1.4;
 
     const form = document.querySelector("#planner-form");
-    const startInput = document.querySelector("#start-date");
-    const endInput = document.querySelector("#end-date");
-    const button = document.querySelector("#calculate");
+    const monthPicker = document.querySelector("#month-picker");
+    const monthPickerToggle = document.querySelector("#month-picker-toggle");
+    const monthPickerLabel = document.querySelector("#month-picker-label");
+    const monthPickerPanel = document.querySelector("#month-picker-panel");
+    const monthPickerYears = document.querySelector("#month-picker-years");
+    const monthPickerMonths = document.querySelector("#month-picker-months");
     const notice = document.querySelector("#notice");
     const body = document.querySelector("#results-body");
     const sortButtons = document.querySelectorAll(".sort-button");
+    const sortableHeaders = document.querySelectorAll("th.sortable");
     let currentRows = [];
-    let currentSort = "best";
+    let currentSort = "date";
+    let currentSortDir = "asc";
+    let showAllDates = false;
+    let totalDaysChecked = 0;
+    let selectedYear = null;
+    let selectedMonth = null;
 
-    const bestDateEl = document.querySelector("#best-date");
+    const summaryCountEl = document.querySelector("#summary-count");
+    const summaryWindowsEl = document.querySelector("#summary-windows");
     const resultCountEl = document.querySelector("#result-count");
+    const viewAllButton = document.querySelector("#view-all-button");
 
     const formatDate = value => new Intl.DateTimeFormat("en-NZ", {
       day: "numeric", month: "short", year: "numeric", timeZone: NZ_TIMEZONE
@@ -503,21 +858,77 @@
       hour: "numeric", minute: "2-digit", timeZone: NZ_TIMEZONE
     }).format(value);
 
-    function getStarCount(score) {
-      if (score >= 95) return 5;
-      if (score >= 90) return 4;
-      if (score >= 80) return 2;
-      return 0;
+    function getScoreClass(row) {
+      if (!row.rideable) return "bad";
+      if (row.note.startsWith("Good")) return "blue";
+      if (row.note.startsWith("OK")) return "ok";
+      if (row.note.startsWith("Tight")) return "ok";
+      return "good";
     }
 
-    function renderStars(score) {
-      const stars = getStarCount(score);
-      const starIcons = Array.from({ length: 5 }, (_, index) => (
-        index < stars
-          ? '<span class="star filled" aria-hidden="true">★</span>'
-          : '<span class="star empty" aria-hidden="true">☆</span>'
-      )).join("");
-      return `<span class="stars" aria-label="${stars} out of 5 stars">${starIcons}</span>`;
+    function renderScore(row) {
+      return `<span class="score ${getScoreClass(row)}">${row.score}</span>`;
+    }
+
+    function minutesOfDay(date) {
+      return date.getHours() * 60 + date.getMinutes();
+    }
+
+    function renderTimeline(row) {
+      const sunriseMin = minutesOfDay(row.sunrise);
+      const sunsetMin = minutesOfDay(row.sunset);
+      const tideMin = minutesOfDay(row.tide);
+      const startMin = minutesOfDay(row.suggestedStart);
+      const finishMin = minutesOfDay(row.estimatedFinish);
+
+      const rangeStart = Math.max(0, Math.min(sunriseMin, startMin) - 60);
+      const rangeEnd = Math.min(24 * 60, Math.max(sunsetMin, finishMin) + 60);
+      const span = rangeEnd - rangeStart || 1;
+      const pct = value => Math.min(100, Math.max(0, ((value - rangeStart) / span) * 100));
+
+      const daylightLeft = pct(sunriseMin);
+      const daylightWidth = pct(sunsetMin) - daylightLeft;
+      const rideLeft = pct(startMin);
+      const rideWidth = pct(finishMin) - rideLeft;
+
+      const tideUrl = `https://tides.niwa.co.nz/?latitude=${LOCATION.latitude}&longitude=${LOCATION.longitude}&numberOfDays=1&startDate=${row.date}`;
+
+      return `
+        <div class="timeline">
+          <div class="timeline-track">
+            <div class="timeline-daylight" style="left:${daylightLeft}%; width:${daylightWidth}%"></div>
+            <div class="timeline-ride" style="left:${rideLeft}%; width:${rideWidth}%"></div>
+            <div class="timeline-point sunrise" style="left:${pct(sunriseMin)}%"></div>
+            <div class="timeline-point sunset" style="left:${pct(sunsetMin)}%"></div>
+            <div class="timeline-point tide" style="left:${pct(tideMin)}%"></div>
+            <div class="timeline-label above" style="left:${pct(startMin)}%"><strong>Start</strong>${escapeHtml(formatTime(row.suggestedStart))}</div>
+            <div class="timeline-label above" style="left:${pct(finishMin)}%"><strong>Finish</strong>${escapeHtml(formatTime(row.estimatedFinish))}</div>
+            <div class="timeline-label below" style="left:${pct(sunriseMin)}%"><strong>Sunrise</strong>${escapeHtml(formatTime(row.sunrise))}</div>
+            <div class="timeline-label below" style="left:${pct(sunsetMin)}%"><strong>Sunset</strong>${escapeHtml(formatTime(row.sunset))}</div>
+            <div class="timeline-label below" style="left:${pct(tideMin)}%"><a href="${tideUrl}" target="_blank" rel="noreferrer"><strong>Low tide</strong>${escapeHtml(formatTime(row.tide))} (${row.height.toFixed(2)}m)</a></div>
+          </div>
+        </div>
+      `;
+    }
+
+    function countRideWindows(rows) {
+      if (!rows.length) {
+        return 0;
+      }
+
+      const sortedDates = [...new Set(rows.map(row => row.date))].sort();
+      let windows = 1;
+
+      for (let index = 1; index < sortedDates.length; index += 1) {
+        const previous = new Date(`${sortedDates[index - 1]}T12:00:00`);
+        const current = new Date(`${sortedDates[index]}T12:00:00`);
+        const dayGap = Math.round((current - previous) / 86400000);
+        if (dayGap > 1) {
+          windows += 1;
+        }
+      }
+
+      return windows;
     }
 
     const localDateKey = value => new Intl.DateTimeFormat("en-CA", {
@@ -530,13 +941,113 @@
       ));
     }
 
-    function dateOnly(value) {
-      return value.toISOString().slice(0, 10);
+
+    const MONTH_NAMES = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+    const MONTH_ABBR = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+    function getMinYear() {
+      return toNzWallClock(new Date()).getFullYear();
     }
 
+    function getMaxYear() {
+      return getMinYear() + 10;
+    }
+
+    function getMinMonth() {
+      return toNzWallClock(new Date()).getMonth() + 1;
+    }
+
+    function getMonthValue() {
+      return `${selectedYear}-${String(selectedMonth).padStart(2, "0")}`;
+    }
+
+    function renderMonthPickerYears() {
+      const minYear = getMinYear();
+      const maxYear = getMaxYear();
+      const startYear = Math.min(Math.max(selectedYear - 2, minYear), maxYear - 5);
+      const years = Array.from({ length: 6 }, (_, index) => startYear + index).filter(year => year <= maxYear);
+      monthPickerYears.innerHTML = years.map(year => (
+        `<button type="button" class="month-picker-year${year === selectedYear ? " selected" : ""}" data-year="${year}">${year}</button>`
+      )).join("");
+    }
+
+    function renderMonthPickerMonths() {
+      const minYear = getMinYear();
+      const minMonth = getMinMonth();
+      monthPickerMonths.innerHTML = MONTH_ABBR.map((label, index) => {
+        const monthNumber = index + 1;
+        const isPast = selectedYear === minYear && monthNumber < minMonth;
+        const classes = ["month-picker-month"];
+        if (monthNumber === selectedMonth) classes.push("selected");
+        if (isPast) classes.push("disabled");
+        return `<button type="button" class="${classes.join(" ")}"${isPast ? " disabled" : ""} data-month="${monthNumber}">${label}</button>`;
+      }).join("");
+    }
+
+    function updateMonthPickerLabel() {
+      monthPickerLabel.textContent = `${MONTH_NAMES[selectedMonth - 1]} ${selectedYear}`;
+    }
+
+    function openMonthPicker() {
+      renderMonthPickerYears();
+      renderMonthPickerMonths();
+      monthPickerPanel.hidden = false;
+      monthPickerToggle.setAttribute("aria-expanded", "true");
+    }
+
+    function closeMonthPicker() {
+      monthPickerPanel.hidden = true;
+      monthPickerToggle.setAttribute("aria-expanded", "false");
+    }
+
+    function selectMonth(year, month) {
+      selectedYear = year;
+      selectedMonth = month;
+      updateMonthPickerLabel();
+      closeMonthPicker();
+      calculateBestDays();
+    }
+
+    monthPickerToggle.addEventListener("click", () => {
+      if (monthPickerPanel.hidden) {
+        openMonthPicker();
+      } else {
+        closeMonthPicker();
+      }
+    });
+
+    monthPickerYears.addEventListener("click", event => {
+      const btn = event.target.closest(".month-picker-year");
+      if (!btn) return;
+      event.stopPropagation();
+      selectedYear = Number(btn.dataset.year);
+      renderMonthPickerYears();
+      renderMonthPickerMonths();
+    });
+
+    monthPickerMonths.addEventListener("click", event => {
+      const btn = event.target.closest(".month-picker-month");
+      if (!btn || btn.disabled) return;
+      event.stopPropagation();
+      selectMonth(selectedYear, Number(btn.dataset.month));
+    });
+
+    document.addEventListener("click", event => {
+      if (!monthPicker.contains(event.target)) {
+        closeMonthPicker();
+      }
+    });
+
+    document.addEventListener("keydown", event => {
+      if (event.key === "Escape") {
+        closeMonthPicker();
+      }
+    });
+
     function setDefaults() {
-      startInput.value = "2027-02-01";
-      endInput.value = "2027-02-28";
+      selectedYear = getMinYear();
+      selectedMonth = getMinMonth();
+      updateMonthPickerLabel();
     }
 
     function solarTime(dateText, isSunrise) {
@@ -575,12 +1086,12 @@
 
     function fetchSunlightMap(start, end) {
       const dates = [];
-      let current = new Date(`${start}T12:00:00`);
-      const last = new Date(`${end}T12:00:00`);
+      let current = new Date(`${start}T00:00:00Z`);
+      const last = new Date(`${end}T00:00:00Z`);
 
       while (current <= last) {
-        dates.push(dateOnly(current));
-        current.setDate(current.getDate() + 1);
+        dates.push(current.toISOString().slice(0, 10));
+        current = new Date(current.getTime() + 86400000);
       }
 
       const rows = dates.map(date => [date, {
@@ -596,7 +1107,7 @@
     }
 
     function pickDailyCandidateLows(tides) {
-      const lowsOnly = tides.filter(tide => tide.height <= LOW_TIDE_MAX_METERS);
+      const lowsOnly = tides.filter(tide => tide.isLow);
       const byDate = new Map();
 
       for (const tide of lowsOnly) {
@@ -620,37 +1131,48 @@
       return candidates;
     }
 
+    function roundToNearestHalfHour(date) {
+      const halfHourMs = 30 * 60 * 1000;
+      return new Date(Math.round(date.getTime() / halfHourMs) * halfHourMs);
+    }
+
     function scoreCandidate(candidate, sun) {
       const tideNz = toNzWallClock(candidate.tide.time);
       const sunriseNz = toNzWallClock(sun.sunrise);
       const sunsetNz = toNzWallClock(sun.sunset);
 
-      const suggestedStart = new Date(tideNz.getTime() - 4 * 60 * 60 * 1000);
+      const suggestedStart = roundToNearestHalfHour(new Date(tideNz.getTime() - 4 * 60 * 60 * 1000));
+      const estimatedFinish = new Date(suggestedStart.getTime() + 8 * 60 * 60 * 1000);
 
-      const tideMinutes = tideNz.getHours() * 60 + tideNz.getMinutes();
       const sunriseMinutes = sunriseNz.getHours() * 60 + sunriseNz.getMinutes();
       const sunsetMinutes = sunsetNz.getHours() * 60 + sunsetNz.getMinutes();
-      const suggestedStartMinutes = tideMinutes - 240;
+      const suggestedStartNz = toNzWallClock(suggestedStart);
+      const estimatedFinishNz = toNzWallClock(estimatedFinish);
+      const suggestedStartMinutes = suggestedStartNz.getHours() * 60 + suggestedStartNz.getMinutes();
       const startAfterSunrise = suggestedStartMinutes >= sunriseMinutes;
-      const estimatedFinishMinutes = suggestedStartMinutes + 8 * 60;
+      const estimatedFinishMinutes = estimatedFinishNz.getHours() * 60 + estimatedFinishNz.getMinutes();
       const beforeSunset = estimatedFinishMinutes <= sunsetMinutes;
       const startBufferMinutes = suggestedStartMinutes - sunriseMinutes;
       const finishBufferMinutes = sunsetMinutes - estimatedFinishMinutes;
       const nearDawn = startBufferMinutes <= 60;
-      const nearDusk = finishBufferMinutes <= 90;
+      const nearDusk = finishBufferMinutes <= 60;
 
-      const hour = tideMinutes / 60;
-      const middayScore = 1 - Math.min(1, Math.abs(hour - 12) / 8);
+      const startBufferScore = startBufferMinutes >= 60 ? 1 : Math.max(0, startBufferMinutes / 60);
+      const finishBufferScore = Math.max(0, Math.min(1, finishBufferMinutes / 180));
+      const bufferScore = (startBufferScore + finishBufferScore) / 2;
       const daylightScore = (startAfterSunrise ? 35 : 0) + (beforeSunset ? 35 : 0);
-      const score = Math.round(daylightScore + middayScore * 30);
+      const score = Math.round(daylightScore + bufferScore * 30);
+      const tideTooHigh = candidate.tide.height > LOW_TIDE_MAX_METERS;
 
       let note = "Best days to ride";
-      if (!startAfterSunrise && !beforeSunset) {
-        note = "Starting in the dark; finishing in the dark.";
+      if (tideTooHigh) {
+        note = "Tide too high to cross";
+      } else if (!startAfterSunrise && !beforeSunset) {
+        note = "Leave before dawn and arrive after dusk";
       } else if (!startAfterSunrise) {
-        note = "Starting in the dark.";
+        note = "Leave before dawn";
       } else if (!beforeSunset) {
-        note = "Finishing in the dark.";
+        note = "Arrive after dusk";
       } else if (score >= 90 && score <= 95) {
         if (nearDawn && nearDusk) {
           note = "Good - near dawn and near dusk";
@@ -669,7 +1191,17 @@
         } else if (nearDusk) {
           note = "OK - near dusk";
         } else {
-          note = "Good days to ride";
+          note = "OK days to ride";
+        }
+      } else if (score < 80) {
+        if (nearDawn && nearDusk) {
+          note = "Tight - near dawn and near dusk";
+        } else if (nearDawn) {
+          note = "Tight - near dawn";
+        } else if (nearDusk) {
+          note = "Tight - near dusk";
+        } else {
+          note = "Tight margins";
         }
       }
 
@@ -680,8 +1212,9 @@
         sunrise: sunriseNz,
         sunset: sunsetNz,
         suggestedStart,
-        rideable: startAfterSunrise && beforeSunset,
-        score,
+        estimatedFinish,
+        rideable: !tideTooHigh && startAfterSunrise && beforeSunset,
+        score: tideTooHigh ? 0 : score,
         note
       };
     }
@@ -691,55 +1224,81 @@
       renderTable();
     }
 
+    function compareRows(a, b) {
+      switch (currentSort) {
+        case "start":
+          return minutesOfDay(a.suggestedStart) - minutesOfDay(b.suggestedStart);
+        case "lowtide":
+          return minutesOfDay(a.tide) - minutesOfDay(b.tide);
+        case "finish":
+          return minutesOfDay(a.estimatedFinish) - minutesOfDay(b.estimatedFinish);
+        case "details":
+          return a.note.localeCompare(b.note);
+        case "score":
+          return a.score - b.score;
+        case "date":
+        default:
+          return a.tide - b.tide;
+      }
+    }
+
     function renderTable() {
-      const rows = [...currentRows].sort((a, b) => currentSort === "date"
-        ? a.tide - b.tide
-        : b.score - a.score);
-      const strongestRows = currentRows
-        .filter(row => row.note === "Best days to ride" || row.note === "Good days to ride")
-        .sort((a, b) => a.tide - b.tide);
-      const best = strongestRows[0] || currentRows.reduce((strongest, row) => row.score > strongest.score ? row : strongest, currentRows[0]);
+      updateSortIndicators();
+      const sortedRows = [...currentRows].sort((a, b) => (
+        currentSortDir === "asc" ? compareRows(a, b) : compareRows(b, a)
+      ));
+      const rideableRows = sortedRows.filter(row => row.rideable);
+      const visibleRows = showAllDates ? sortedRows : rideableRows;
 
-      bestDateEl.innerHTML = strongestRows.length
-        ? `<div class="result-date-list">${strongestRows.map(row => `<span>${escapeHtml(formatDate(row.tide))}</span>`).join("")}</div>`
-        : "No good days to ride";
+      const windows = countRideWindows(rideableRows);
+      const firstRideableRow = rideableRows[0];
 
-      body.innerHTML = rows.map(row => {
-        const fitBand = row.score >= 90 && row.score <= 95
-          ? "blue"
-          : row.score >= 80 && row.score < 90
-            ? "orange"
-            : "green";
-        const rowClass = row.rideable ? `fit-${fitBand}` : "fit-conflict";
+      if (rideableRows.length) {
+        summaryCountEl.textContent = `${rideableRows.length} Suitable dates`;
+      } else {
+        summaryCountEl.textContent = "No suitable dates";
+      }
+
+      body.innerHTML = visibleRows.length ? visibleRows.map((row, index) => {
         const highlight = row.note === "Best days to ride"
           ? " best best-top"
           : row.note === "Good days to ride"
             ? " best"
-            : "";
+            : row.rideable
+              ? ""
+              : " row-bad";
 
-        return `<tr class="${rowClass}${highlight}">
+        const tagClass = !row.rideable
+          ? " bad"
+          : row.note.startsWith("Good")
+            ? " blue"
+            : row.note.startsWith("OK") || row.note.startsWith("Tight")
+              ? " orange"
+              : "";
+        const tagEmphasis = row.note === "Best days to ride" ? " emphasis" : "";
+
+        return `<tr class="${highlight}">
           <td><strong>${escapeHtml(formatDate(row.tide))}</strong></td>
           <td>${escapeHtml(formatTime(row.suggestedStart))}</td>
-          <td>${escapeHtml(formatTime(row.tide))} (${row.height.toFixed(2)}m)</td>
-          <td>${escapeHtml(formatTime(new Date(row.suggestedStart.getTime() + 8 * 60 * 60 * 1000)))}</td>
-          <td>${escapeHtml(formatTime(row.sunrise))} -> ${escapeHtml(formatTime(row.sunset))}</td>
-          <td>${renderStars(row.score)}</td>
-          <td>${escapeHtml(row.note)}</td>
+          <td class="col-lowtide">${escapeHtml(formatTime(row.tide))}</td>
+          <td>${escapeHtml(formatTime(row.estimatedFinish))}</td>
+          <td><span class="tag${tagClass}${tagEmphasis}">${escapeHtml(row.note)}</span></td>
+          <td class="col-score">${renderScore(row)}</td>
+          <td><button type="button" class="row-toggle" data-toggle="${index}" aria-expanded="false" aria-label="Show details for ${escapeHtml(formatDate(row.tide))}">▾</button></td>
+        </tr>
+        <tr class="detail-row" data-detail="${index}" hidden>
+          <td colspan="7">
+            ${renderTimeline(row)}
+          </td>
         </tr>`;
-      }).join("");
+      }).join("") : "<tr><td colspan=\"7\">No suitable ride dates in this range.</td></tr>";
 
-      resultCountEl.textContent = `${rows.length} days compared`;
+      resultCountEl.textContent = showAllDates
+        ? `${visibleRows.length} days shown`
+        : `${totalDaysChecked} days assessed`;
+
+      viewAllButton.textContent = showAllDates ? "Show best days only" : `View all ${totalDaysChecked} days`;
     }
-
-    sortButtons.forEach((sortButton) => {
-      sortButton.addEventListener("click", () => {
-        currentSort = sortButton.dataset.sort;
-        sortButtons.forEach(buttonElement => buttonElement.classList.toggle("active", buttonElement === sortButton));
-        if (currentRows.length) {
-          renderTable();
-        }
-      });
-    });
 
     async function gatherTides(start, end) {
       const years = [];
@@ -755,11 +1314,24 @@
         return response.json();
       }));
 
-      const predictions = responses
+      const allPredictions = responses
         .flatMap(data => data.predictions || data.values || [])
         .map(item => ({ time: new Date(item.time), height: Number(item.height) }))
         .filter(item => !Number.isNaN(item.time.getTime()) && Number.isFinite(item.height))
-        .filter(item => item.time >= new Date(`${start}T00:00:00`) && item.time <= new Date(`${end}T23:59:59`));
+        .sort((a, b) => a.time - b.time);
+
+      const withLowFlag = allPredictions.map((item, index) => {
+        const prev = allPredictions[index - 1];
+        const next = allPredictions[index + 1];
+        const isLow = (!prev || item.height <= prev.height) && (!next || item.height <= next.height);
+        return { ...item, isLow };
+      });
+
+      const predictions = withLowFlag
+        .filter(item => {
+          const key = localDateKey(item.time);
+          return key >= start && key <= end;
+        });
 
       if (!predictions.length) {
         throw new Error("No static tide predictions exist for the selected dates.");
@@ -768,21 +1340,30 @@
       return { tides: predictions, source: "local static tide data" };
     }
 
+    function monthRange(monthValue) {
+      const [year, month] = monthValue.split("-").map(Number);
+      const lastDay = new Date(Date.UTC(year, month, 0)).getUTCDate();
+      const start = `${monthValue}-01`;
+      const end = `${monthValue}-${String(lastDay).padStart(2, "0")}`;
+      return { start, end };
+    }
+
     async function calculateBestDays() {
-      const start = startInput.value;
-      const end = endInput.value;
-      if (!start || !end || end < start) {
-        notice.textContent = "Choose a valid start and end date.";
+      const monthValue = getMonthValue();
+      if (!selectedYear || !selectedMonth) {
+        notice.textContent = "Choose a month.";
         notice.className = "notice error";
         return;
       }
 
-      button.disabled = true;
-      button.textContent = "Calculating...";
+      const { start, end } = monthRange(monthValue);
+
       notice.textContent = "";
       notice.className = "notice";
 
       try {
+        totalDaysChecked = Math.round((new Date(`${end}T00:00:00`) - new Date(`${start}T00:00:00`)) / 86400000) + 1;
+
         const [{ tides }, sunlight] = await Promise.all([
           gatherTides(start, end),
           fetchSunlightMap(start, end)
@@ -800,12 +1381,10 @@
       } catch (error) {
         notice.textContent = error.message;
         notice.className = "notice error";
-        body.innerHTML = "<tr><td colspan=\"7\">No results yet. Fix the data source and run again.</td></tr>";
-        bestDateEl.textContent = "No recommendation";
+        body.innerHTML = "<tr><td colspan=\"5\">No results yet. Fix the data source and run again.</td></tr>";
+        summaryCountEl.textContent = "No suitable dates";
+        summaryWindowsEl.textContent = "Choose dates to see the best ride windows.";
         resultCountEl.textContent = "No windows compared";
-      } finally {
-        button.disabled = false;
-        button.textContent = "Calculate best days";
       }
     }
 
@@ -814,8 +1393,74 @@
       calculateBestDays();
     });
 
-    [startInput, endInput].forEach(input => {
-      input.addEventListener("change", calculateBestDays);
+    viewAllButton.addEventListener("click", () => {
+      showAllDates = !showAllDates;
+      renderTable();
+    });
+
+    const summaryBar = document.querySelector("#summary-bar");
+    const resultsSection = document.querySelector("#results");
+
+    summaryBar.addEventListener("click", () => {
+      resultsSection.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+
+    summaryBar.addEventListener("keydown", event => {
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        resultsSection.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    });
+
+    const defaultSortDir = { date: "asc", start: "asc", lowtide: "asc", finish: "asc", details: "asc", score: "desc" };
+
+    function setSort(key, dir) {
+      currentSort = key;
+      currentSortDir = dir || defaultSortDir[key] || "asc";
+      renderTable();
+    }
+
+    function updateSortIndicators() {
+      sortButtons.forEach(btn => {
+        btn.classList.toggle("active", btn.dataset.sort === currentSort);
+      });
+
+      sortableHeaders.forEach(th => {
+        const isActive = th.dataset.sortKey === currentSort;
+        th.classList.toggle("active", isActive);
+        const arrow = th.querySelector(".sort-arrow");
+        arrow.textContent = isActive ? (currentSortDir === "asc" ? "▲" : "▼") : "";
+      });
+    }
+
+    sortButtons.forEach(btn => {
+      btn.addEventListener("click", () => {
+        setSort(btn.dataset.sort);
+      });
+    });
+
+    sortableHeaders.forEach(th => {
+      th.addEventListener("click", () => {
+        if (currentSort === th.dataset.sortKey) {
+          setSort(currentSort, currentSortDir === "asc" ? "desc" : "asc");
+        } else {
+          setSort(th.dataset.sortKey);
+        }
+      });
+    });
+
+    body.addEventListener("click", event => {
+      const toggle = event.target.closest(".row-toggle");
+      if (!toggle) return;
+
+      const index = toggle.dataset.toggle;
+      const detailRow = body.querySelector(`tr.detail-row[data-detail="${index}"]`);
+      if (!detailRow) return;
+
+      const expanded = !detailRow.hidden;
+      detailRow.hidden = expanded;
+      toggle.classList.toggle("expanded", !expanded);
+      toggle.setAttribute("aria-expanded", String(!expanded));
     });
 
     setDefaults();
