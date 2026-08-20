@@ -1255,7 +1255,7 @@
       const score = Math.round(daylightScore + bufferScore * 30);
       const tideTooHigh = candidate.tide.height > LOW_TIDE_MAX_METERS;
 
-      let note = "Best day to ride";
+      let note = "Great day to ride";
       if (tideTooHigh) {
         note = "Tide too high to cross";
       } else if (!startAfterSunrise && !beforeSunset) {
@@ -1362,7 +1362,7 @@
       }
 
       body.innerHTML = visibleRows.length ? visibleRows.map((row, index) => {
-        const highlight = row.note === "Best day to ride"
+        const highlight = row.note === "Great day to ride"
           ? " best best-top"
           : row.note === "Good day to ride"
             ? " best"
@@ -1377,7 +1377,7 @@
             : row.note.startsWith("OK") || row.note.startsWith("Tight")
               ? " orange"
               : "";
-        const tagEmphasis = row.note === "Best day to ride" ? " emphasis" : "";
+        const tagEmphasis = row.note === "Great day to ride" ? " emphasis" : "";
 
         return `<tr class="${highlight}">
           <td><strong>${escapeHtml(formatDate(row.tide))}</strong></td>
